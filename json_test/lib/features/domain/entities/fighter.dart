@@ -1,20 +1,21 @@
 import 'dart:ffi';
 
 import 'package:equatable/equatable.dart';
+import 'package:json_test/features/domain/entities/fight.dart';
 
 class FighterEntity extends Equatable {
 
   String ? name;
-  String ? weight_class;
-  int ? weight_class_rank;
+  List<String> ? weight_classes;
+  List <int> ? weight_class_rank;
   String ? gender;
   int ? current_win_streak;
   int ? current_loss_streak;
-  Float ? avg_SIG_STR_landed;
-  Float ? avg_SIG_STR_pct;
-  Float ? avg_SUB_ATT;
-  Float ? avg_TD_landed;
-  Float ? avg_TD_pct;
+  double ? avg_SIG_STR_landed;
+  double ? avg_SIG_STR_pct;
+  double ? avg_SUB_ATT;
+  double ? avg_TD_landed;
+  double ? avg_TD_pct;
   int ? total_rounds_fought;
   int ? total_title_bouts;
   int ? wins_by_Decision_Majority;
@@ -23,16 +24,22 @@ class FighterEntity extends Equatable {
   int ? wins_by_KO;
   int ? wins_by_Submission;
   int ? wins_by_TKO_Doctor_Stoppage;
-  Float ? height_cms;
-  Float ? reach_cms;
+  double ? height_cms;
+  double ? reach_cms;
  
-  
-  
+  List<int> ? elo;
+
+  List<FightEntity> ? fight_history;
+ 
   String ? stance;
+
+  int ? wins;
+
+  int ? age;
 
   FighterEntity({
     this.name,
-    this.weight_class,
+    this.weight_classes,
     this.weight_class_rank,
     this.gender,
     this.current_win_streak,
@@ -52,6 +59,11 @@ class FighterEntity extends Equatable {
     this.wins_by_TKO_Doctor_Stoppage,
     this.height_cms,
     this.reach_cms,
+    this.elo,
+    this.fight_history,
+    this.stance,
+    this.wins,
+    this.age,
 
   });
 
@@ -64,7 +76,7 @@ class FighterEntity extends Equatable {
   List < Object ? > get props {
     return [
       name,
-      weight_class,
+      weight_classes,
       weight_class_rank,
       gender,
       current_win_streak,
@@ -83,6 +95,11 @@ class FighterEntity extends Equatable {
       wins_by_TKO_Doctor_Stoppage,
       height_cms,
       reach_cms,
+      elo,
+      fight_history,
+      stance,
+      wins,
+      age,
     ];
   }
 
