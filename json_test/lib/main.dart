@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -86,7 +88,8 @@ class _MyHomePageState extends State<MyHomePage> {
     // The dynamic type in Dart is a special type that tells the Dart analyzer to allow any type of value to be assigned to this variable.
     // So 'List<dynamic>' means that the list data can contain elements of any type.
     final List<dynamic> _data = json.decode(response)['items']; 
-    
+    Random random = Random();
+
     // print("  _items.length: ${_items.length}");
     // print("  data.length: ${data.length}");
     // print("  R_Fighter: ${_items[1]['id']}");
@@ -128,23 +131,81 @@ class _MyHomePageState extends State<MyHomePage> {
 
 
         _fightEntity.winner = _data[i]['Winner'];
-        _fightEntity.r_odds = _data[i]['R_odds'];
-        _fightEntity.b_odds = _data[i]['B_odds'];
+        // _fightEntity.r_odds = _data[i]['R_odds'];
+        dynamic rOddsValue = _data[i]['R_odds'];
+        _fightEntity.r_odds = rOddsValue != null && rOddsValue != ""
+            ? rOddsValue is int
+                ? rOddsValue
+                : int.tryParse(rOddsValue.toString()) ?? -69420
+            : -69420;
+                
+        //_fightEntity.b_odds = _data[i]['B_odds'];
+        dynamic bOddsValue = _data[i]['B_odds'];
+        _fightEntity.b_odds = bOddsValue != null && bOddsValue != ""
+            ? bOddsValue is int
+                ? bOddsValue
+                : int.tryParse(bOddsValue.toString()) ?? -69420
+            : -69420;
         _fightEntity.weight_class = _data[i]['weight_class'];
         _fightEntity.finish = _data[i]['finish'];
         _fightEntity.r_age = _data[i]['R_age'];
         _fightEntity.b_age = _data[i]['B_age'];
 
         // trying to figure out why both B and R_match_weightclass_rank has no value
-        print('Value of weight class rank: ${_data[i]["B_match_weightclass_rank"]}'); // is an int, has no value for some reason. was trying to parse it to an int, but you can't parse nothing into an int, without gettinga  FormatException.
-        print('Value of B_sig_strike_landed: ${_data[i]["B_avg_SIG_STR_landed"]}'); //is a Float, prints fine, has a value
-        print('Value of B_age: ${_data[i]["B_age"]}'); // is an int, prints fine, ahs a value
+        // print('Value of weight class rank: ${_data[i]["B_match_weightclass_rank"]}'); // is an int, has no value for some reason. was trying to parse it to an int, but you can't parse nothing into an int, without gettinga  FormatException.
+        // print('Value of B_sig_strike_landed: ${_data[i]["B_avg_SIG_STR_landed"]}'); //is a Float, prints fine, has a value
+        // print('Value of B_age: ${_data[i]["B_age"]}'); // is an int, prints fine, ahs a value
 
 
 
         _fights.add(_fightEntity);
 
+
+        /*
+
+          Explaining the absolute tomfoolery that is occuring with statements like these
+
+          avg_SIG_STR_pct: _data[i]["B_avg_SIG_STR_pct"] != null && _data[i]["B_avg_SIG_STR_pct"] != ""
+            ? _data[i]["B_avg_SIG_STR_pct"] is double
+              ? _data[i]["B_avg_SIG_STR_pct"]
+              : double.tryParse(_data[i]["B_avg_SIG_STR_pct"]) ?? -69420
+            : -69420,
+
+            Initially, I wanted to do things nice and simple, like this: // avg_SIG_STR_landed: _data[i]["R_avg_SIG_STR_landed"]
+            But some values in the data set are numbers of String. So I used double.parse(). 
+            But some values in the data set are just null, like in fight_id = 2, this is an actual piece of data: "B_avg_SIG_STR_pct": "",    You can't call double.parse on a null value without getting an error though.
+
+            So, here's what that block of code does:
+            Checks if _data[i]["B_avg_SIG_STR_pct"] is not null and not an empty string.
+            If it's not null and not an empty string, it checks if it's already a double type.
+            If it's already a double type, it assigns its value directly to avg_SIG_STR_pct.
+            If it's not a double type, it tries to parse it to a double. If parsing is successful, it assigns the parsed value to avg_SIG_STR_pct. If parsing fails (double.tryParse returns null), it assigns -69420 to avg_SIG_STR_pct.
+            If _data[i]["B_avg_SIG_STR_pct"] is null or an empty string, it assigns -69420 to avg_SIG_STR_pct.
+
+
+
+            Come to think of it I'll probably replace the -69420 with just "null". The thought process was (these are notes that I wrote earlier):
+            boom so just check if each variable is null
+            and if it is then just don't assign anything to the field? if you assign it a zero that could falsely impact the stats.
+            what you could do is just every time there's a null variable you assign the entity field some ridiculous number like -69420. 
+            Then, when making stats or whatever, if a number is -69420, you know not to include it in the stats calculation. 
+            Since -69420 isn't the actual value, but rather a sign that there wasn't any value at all, and thus nothing to include into the stats.
+
+
+            Like damn I really could just do all that but just with null lol. That was so overthought, you'd think I was really embracing the "-69420". (since it's a negative 69420, does that mean I'm waiting til marriage, and abstaining from usage of illegal narcotics? )
+
+        */
+
         if(_fighters[_fightEntity.r_fighter_string] == null){
+
+            // print("Data Type: ${_data[i]["R_avg_SIG_STR_landed"].runtimeType}");
+            // print("Value: ${_data[i]["R_avg_SIG_STR_landed"]}");
+            // print("value of _data.length: ${_data.length}");
+            // print("value of i: ${i}");
+            // print("Rfighter name: ${_data[i]["R_Fighter"]}");
+            // print("iteration # fight_id: ${_data[i]["fight_id"]}");
+
+
           // because FightEntity's 'r_fighter_string' is nullable, and the hasmap's key is not nullable, we need to tell dart the value _fightEntity.r_fighter_string! isn't null
           // otherwise there's a type mismatch, as String != String ?
           //_fighters[_fightEntity.r_fighter_string!] = new FighterEntity(); 
@@ -155,11 +216,36 @@ class _MyHomePageState extends State<MyHomePage> {
             gender: _data[i]["gender"],
             current_win_streak: _data[i]["R_current_win_streak"],
             current_loss_streak: _data[i]["R_current_lose_streak"],
-            avg_SIG_STR_landed: _data[i]["R_avg_SIG_STR_landed"],
-            avg_SIG_STR_pct: _data[i]["R_avg_SIG_STR_pct"],
+            // avg_SIG_STR_landed: _data[i]["R_avg_SIG_STR_landed"],
+            avg_SIG_STR_landed: _data[i]["R_avg_SIG_STR_landed"] != null && _data[i]["R_avg_SIG_STR_landed"] != ""
+            ? _data[i]["R_avg_SIG_STR_landed"] is double
+              ? _data[i]["R_avg_SIG_STR_landed"]
+              : double.tryParse(_data[i]["R_avg_SIG_STR_landed"].toString()) ?? -69420
+            : -69420,
+           //avg_SIG_STR_pct: _data[i]["R_avg_SIG_STR_pct"],
+           avg_SIG_STR_pct: _data[i]["R_avg_SIG_STR_pct"] != null && _data[i]["R_avg_SIG_STR_pct"] != ""
+            ? _data[i]["R_avg_SIG_STR_pct"] is double
+              ? _data[i]["R_avg_SIG_STR_pct"]
+              : double.tryParse(_data[i]["R_avg_SIG_STR_pct"].toString()) ?? -69420
+            : -69420,
             //avg_SUB_ATT: _data[i]["R_avg_SUB_ATT"], // commented out until bug fixed, this shit is so goofy lol
-            avg_TD_landed: _data[i]["R_avg_TD_landed"],
-            avg_TD_pct: _data[i]["R_avg_TD_pct"],
+            avg_SUB_ATT: _data[i]["R_avg_SUB_ATT"] != null && _data[i]["R_avg_SUB_ATT"] != ""
+            ? _data[i]["R_avg_SUB_ATT"] is double
+              ? _data[i]["R_avg_SUB_ATT"]
+              : double.tryParse(_data[i]["R_avg_SUB_ATT"].toString()) ?? -69420
+            : -69420,
+            // avg_TD_landed: _data[i]["R_avg_TD_landed"],
+            avg_TD_landed: _data[i]["R_avg_TD_landed"] != null && _data[i]["R_avg_TD_landed"] != ""
+            ? _data[i]["R_avg_TD_landed"] is double
+              ? _data[i]["R_avg_TD_landed"]
+              : double.tryParse(_data[i]["R_avg_TD_landed"].toString()) ?? -69420
+            : -69420,
+            // avg_TD_pct: _data[i]["R_avg_TD_pct"],
+            avg_TD_pct: _data[i]["R_avg_TD_pct"] != null && _data[i]["R_avg_TD_pct"] != ""
+            ? _data[i]["R_avg_TD_pct"] is double
+              ? _data[i]["R_avg_TD_pct"]
+              : double.tryParse(_data[i]["R_avg_TD_pct"].toString()) ?? -69420
+            : -69420,
             total_rounds_fought: _data[i]["R_total_rounds_fought"],
             total_title_bouts: _data[i]["R_total_title_bouts"],
             wins_by_Decision_Majority: _data[i]["R_win_by_Decision_Majority"],
@@ -168,8 +254,18 @@ class _MyHomePageState extends State<MyHomePage> {
             wins_by_KO: _data[i]["R_win_by_KO/TKO"],
             wins_by_Submission: _data[i]["R_win_by_Submission"],
             wins_by_TKO_Doctor_Stoppage: _data[i]["R_win_by_TKO_Doctor_Stoppage"],
-            height_cms: _data[i]["R_Height_cms"],
-            reach_cms: _data[i]["R_Reach_cms"],
+            // height_cms: _data[i]["R_Height_cms"],
+            height_cms: _data[i]["R_Height_cms"] != null && _data[i]["R_Height_cms"] != ""
+            ? _data[i]["R_Height_cms"] is double
+              ? _data[i]["R_Height_cms"]
+              : double.tryParse(_data[i]["R_Reach_cms"].toString()) ?? -69420
+            : -69420,
+            // reach_cms: _data[i]["R_Reach_cms"],
+            reach_cms: _data[i]["R_Reach_cms"] != null && _data[i]["R_Reach_cms"] != ""
+            ? _data[i]["R_Reach_cms"] is double
+              ? _data[i]["R_Reach_cms"]
+              : double.tryParse(_data[i]["R_Reach_cms"].toString()) ?? -69420
+            : -69420,
             elo: [1200], // 1200 as a placeholder for now. Not sure how what to put here right now.
             fight_history: [_fightEntity], // I believe that if they aren't yet in the list, then this is their first ufc fight. This line returns a list of fightEntities, with the current fight entity (their firt UFC figh) being the 0th and only fight in the list.
             stance: _data[i]["R_Stance"],
@@ -184,6 +280,33 @@ class _MyHomePageState extends State<MyHomePage> {
           // because FightEntity's 'r_fighter_string' is nullable, and the hasmap's key is not nullable, we need to tell dart the value _fightEntity.r_fighter_string! isn't null
           // otherwise there's a type mismatch, as String != String ?
           //_fighters[_fightEntity.r_fighter_string!] = new FighterEntity(); 
+
+
+            // print("Data Type: ${_data[i]["B_avg_TD_landed"].runtimeType}");
+            // print("Value: ${_data[i]["B_avg_TD_landed"]}");
+            // print("value of _data.length: ${_data.length}");
+            // print("value of i: ${i}");
+            // print("Bfighter name: ${_data[i]["B_Fighter"]}");
+            // print("iteration # fight_id: ${_data[i]["fight_id"]}");
+
+       
+            // double avg_SIG_STR_pct;
+            // if (_data[i]["B_avg_SIG_STR_pct"] is double) {
+            //   avg_SIG_STR_pct = _data[i]["B_avg_SIG_STR_pct"];
+            //   print("shit is a double apparently");
+            // } else if (_data[i]["B_avg_SIG_STR_pct"] is String) {
+            //   avg_SIG_STR_pct = double.parse(_data[i]["B_avg_SIG_STR_pct"]);
+            //   print("shit is a string apparently");
+            // } else {
+            //   // Handle other types or null values if necessary
+            //   // For example, set avg_SIG_STR_pct to a default value
+            //   // avg_SIG_STR_pct = 0.0;
+            //   print("else occured on SIG_STR_pct. SIG_STR_pct data type:");
+            // }
+
+
+
+
          _fighters[_fightEntity.r_fighter_string!] = FighterEntity(
             name: _fightEntity.r_fighter_string,
             weight_classes: [_fightEntity.weight_class!], //  weight_classes is a list containing just "_fightEntity.weight_class". Doesn't account for fighters who fight in multiple weight classes. 
@@ -191,11 +314,33 @@ class _MyHomePageState extends State<MyHomePage> {
             gender: _data[i]["gender"],
             current_win_streak: _data[i]["B_current_win_streak"],
             current_loss_streak: _data[i]["B_current_lose_streak"],
-            avg_SIG_STR_landed: _data[i]["B_avg_SIG_STR_landed"], //brev how did this one not make an error first before avg_SUB_ATT? anyways I'm tapping out for tonight but look into this more later, ideally tommorrow.
-            avg_SIG_STR_pct: _data[i]["B_avg_SIG_STR_pct"],
-            //avg_SUB_ATT: _data[i]["B_avg_SUB_ATT"], // commented out until bug fixed, this shit is so goofy lol
-            avg_TD_landed: _data[i]["B_avg_TD_landed"],
-            avg_TD_pct: _data[i]["B_avg_TD_pct"],
+            //avg_SIG_STR_landed: _data[i]["B_avg_SIG_STR_landed"], //brev how did this one not make an error first before avg_SUB_ATT? anyways I'm tapping out for tonight but look into this more later, ideally tommorrow.
+            avg_SIG_STR_landed: _data[i]["B_avg_SIG_STR_landed"] != null && _data[i]["B_avg_SIG_STR_landed"] != ""
+            ? _data[i]["B_avg_SIG_STR_landed"] is double
+              ? _data[i]["B_avg_SIG_STR_landed"]
+              : double.tryParse(_data[i]["B_avg_SIG_STR_landed"].toString()) ?? -69420
+            : -69420,
+            avg_SIG_STR_pct: _data[i]["B_avg_SIG_STR_pct"] != null && _data[i]["B_avg_SIG_STR_pct"] != ""
+            ? _data[i]["B_avg_SIG_STR_pct"] is double
+              ? _data[i]["B_avg_SIG_STR_pct"]
+              : double.tryParse(_data[i]["B_avg_SIG_STR_pct"].toString()) ?? -69420
+            : -69420,
+            // avg_SUB_ATT: _data[i]["B_avg_SUB_ATT"], // commented out until bug fixed, this shit is so goofy lol
+            avg_SUB_ATT: _data[i]["B_avg_SUB_ATT"] != null && _data[i]["B_avg_SUB_ATT"] != ""
+            ? _data[i]["B_avg_SUB_ATT"] is double
+              ? _data[i]["B_avg_SUB_ATT"]
+              : double.tryParse(_data[i]["B_avg_SUB_ATT"].toString()) ?? -69420
+            : -69420,
+            avg_TD_landed: _data[i]["B_avg_TD_landed"] != null && _data[i]["B_avg_TD_landed"] != ""
+            ? _data[i]["B_avg_TD_landed"] is double
+              ? _data[i]["B_avg_TD_landed"]
+              : double.tryParse(_data[i]["B_avg_TD_landed"].toString()) ?? -69420
+            : -69420,
+            avg_TD_pct: _data[i]["B_avg_TD_pct"] != null && _data[i]["B_avg_TD_pct"] != ""
+            ? _data[i]["B_avg_TD_pct"] is double
+              ? _data[i]["B_avg_TD_pct"]
+              : double.tryParse(_data[i]["B_avg_TD_pct"].toString()) ?? -69420
+            : -69420,
             total_rounds_fought: _data[i]["B_total_rounds_fought"],
             total_title_bouts: _data[i]["B_total_title_bouts"],
             wins_by_Decision_Majority: _data[i]["B_win_by_Decision_Majority"],
@@ -204,8 +349,18 @@ class _MyHomePageState extends State<MyHomePage> {
             wins_by_KO: _data[i]["B_win_by_KO/TKO"],
             wins_by_Submission: _data[i]["B_win_by_Submission"],
             wins_by_TKO_Doctor_Stoppage: _data[i]["B_win_by_TKO_Doctor_Stoppage"],
-            height_cms: _data[i]["B_Height_cms"],
-            reach_cms: _data[i]["B_Reach_cms"],
+            // height_cms: _data[i]["B_Height_cms"],
+            height_cms: _data[i]["B_Height_cms"] != null && _data[i]["B_Height_cms"] != ""
+            ? _data[i]["B_Height_cms"] is double
+              ? _data[i]["B_Height_cms"]
+              : double.tryParse(_data[i]["B_Height_cms"].toString()) ?? -69420
+            : -69420,
+            //reach_cms: _data[i]["B_Reach_cms"],
+            reach_cms: _data[i]["B_Reach_cms"] != null && _data[i]["B_Reach_cms"] != ""
+            ? _data[i]["B_Reach_cms"] is double
+              ? _data[i]["B_Reach_cms"]
+              : double.tryParse(_data[i]["B_Reach_cms"].toString()) ?? -69420
+            : -69420,
             elo: [1200], // 1200 as a placeholder for now. Not sure how what to put here right now.
             fight_history: [_fightEntity], // I believe that if they aren't yet in the list, then this is their first ufc fight. This line returns a list of fightEntities, with the current fight entity (their firt UFC figh) being the 0th and only fight in the list.
             stance: _data[i]["B_Stance"],
@@ -216,14 +371,43 @@ class _MyHomePageState extends State<MyHomePage> {
 
       }
 
-      print("${_data[0]['R_Fighter']}");
-      print("${_data[572]['R_Fighter']}");
+// these next 2 return null?
+      // print("${_data[0]['R_Fighter']}");
+      // print("${_data[572]['R_Fighter']}");
 
       //print("${_items[0]['id']}");
       // print("${_items[468]['R_fighter']}");
       // print("${_items[468]['fight_id']}");
+
+      print('Creation of _fighters hasmap and _fights list has been completed! ');
       print('Length of the _fighters hashmap: ${_fighters.length}');
       print('Length of the _fights list: ${_fights.length}');
+
+      for (FightEntity fight in _fights) {
+          print(fight.toString());
+      }
+
+      //  _fighters.forEach((key, value) {
+      //     print('$key: $value');
+      //   });
+
+      // print('Random Fighter from _fighters hashamp: ${ _fighters[_fights[10].r_fighter_string]} \n');
+      // print('Random fight details:');
+      // print('Fight_ id: ${_fights[10].fight_id}\n R fighter: ${_fights[10].r_fighter_string}\n B fighter: ${_fights[10].b_fighter_string}\n Winner: ${_fights[10].winner}\n');
+
+      // int randomNumber = random.nextInt(1001); 
+
+      // for(int j = 0; j < 10; j++){
+
+      //   randomNumber = random.nextInt(1001); 
+      //   print('Random Fighter from _fighters hashamp: ${ _fighters[_fights[randomNumber].r_fighter_string]} \n');
+      //   print('Random fight details:');
+      //   print('Fight_ id: ${_fights[randomNumber].fight_id}\n R fighter: ${_fights[randomNumber].r_fighter_string}\n B fighter: ${_fights[randomNumber].b_fighter_string}\n Winner: ${_fights[randomNumber].winner}\n');
+      // }
+
+
+
+
 
     });
 
