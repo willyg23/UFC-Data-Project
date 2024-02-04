@@ -1,4 +1,4 @@
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:equatable/equatable.dart';
 import 'package:json_test/features/domain/entities/fight.dart';
@@ -16,13 +16,24 @@ class eloCalculator{
        // Increment wins if winnerEntity is not null
       winnerEntity.wins = (winnerEntity.wins ?? 0) + 1;
       // Update the fighterHashMap with the modified entity
-      fighterHashMap[winner] = winnerEntity;
-
-
-
+      fighterHashMap[r_fighter] = winnerEntity;
+      loserEntity.wins = (loserEntity.wins ?? 0) + 1;
+      // Update the fighterHashMap with the modified entity
+      fighterHashMap[b_fighter] = loserEntity;
     }
 
     else if(winner == "Blue"){
+      FighterEntity winnerEntity = fighterHashMap[b_fighter]!;
+      FighterEntity loserEntity = fighterHashMap[r_fighter]!;
+       // Increment wins if winnerEntity is not null
+      winnerEntity.wins = (winnerEntity.wins ?? 0) + 1;
+      // Update the fighterHashMap with the modified entity
+      fighterHashMap[b_fighter] = winnerEntity;
+      // Update the fighterHashMap with the modified entity
+      fighterHashMap[r_fighter] = loserEntity;
+      loserEntity.wins = (loserEntity.wins ?? 0) + 1;
+      // Update the fighterHashMap with the modified entity
+      fighterHashMap[b_fighter] = loserEntity;
 
     }
     //TODO: conditionals for draws, DQs,  no contests. DQs and no contests might be the same thing, need to look into that.

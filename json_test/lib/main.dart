@@ -273,7 +273,11 @@ class _MyHomePageState extends State<MyHomePage> {
             fight_history: [_fightEntity], // I believe that if they aren't yet in the list, then this is their first ufc fight. This line returns a list of fightEntities, with the current fight entity (their firt UFC figh) being the 0th and only fight in the list.
             stance: _data[i]["R_Stance"],
             //wins: _data[i]["R_wins"],
+            // we set both wins and losses to 0 because we're going to increment them in the elo calculator. We do 0 instead of null, since you can't increment null.
+            wins: 0,
             age: _fightEntity.r_age,
+            losses: 0,
+            
             );
 
         }
@@ -367,8 +371,11 @@ class _MyHomePageState extends State<MyHomePage> {
             elo: [1200], // 1200 as a placeholder for now. Not sure how what to put here right now.
             fight_history: [_fightEntity], // I believe that if they aren't yet in the list, then this is their first ufc fight. This line returns a list of fightEntities, with the current fight entity (their firt UFC figh) being the 0th and only fight in the list.
             stance: _data[i]["B_Stance"],
-            wins: _data[i]["B_wins"],
+            //wins: _data[i]["B_wins"],
+            // we set both wins and losses to 0 because we're going to increment them in the elo calculator. We do 0 instead of null, since you can't increment null.
+            wins: 0,
             age: _fightEntity.r_age,
+            losses: 0,
             );
         }
 
