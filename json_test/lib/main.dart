@@ -66,7 +66,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
   List _items = [];
-  FightEntity _fightEntity = new FightEntity();
+  //FightEntity _fightEntity = new FightEntity();
 
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
@@ -87,7 +87,7 @@ class _MyHomePageState extends State<MyHomePage> {
     //changing or adding onto the amount of fights in the json via a function in the code seems way ovvercomplicated to just simply updating the JSON.
     // The dynamic type in Dart is a special type that tells the Dart analyzer to allow any type of value to be assigned to this variable.
     // So 'List<dynamic>' means that the list data can contain elements of any type.
-    final List<dynamic> _data = json.decode(response)['items']; 
+    final List<dynamic> _data = json.decode(response)['items']; // should you be doing final here?
     Random random = Random();
 
     // print("  _items.length: ${_items.length}");
@@ -108,13 +108,16 @@ class _MyHomePageState extends State<MyHomePage> {
       
       for(int i = _data.length - 1; i >= 0; i--){ //start from the bottom, as that's chroniclogical order
 
+        FightEntity _fightEntity = new FightEntity();
       /*TODO: need to add more than what you have now on what happens if the _fightEntity.b_fighter_string or r is in the hashmap.
       one example being, if the fighter isn't new to the hashmap, you add the fightEntity to his fight_history field.
+
+      what the fuck are you talking about will
       */
 
         //print("  R_Fighter: ${_data[i]['R_fighter']}");
           
-            //won't keep both of these forever, as it's redundant. Just keeping it like that for now because I'm just implementing the fighter entity stuff.
+            //won't keep both the fighter entity and the fighter string forever, as it's redundant. Just keeping it like that for now because I'm just implementing the fighter entity stuff.
             //so I'll keep both in case i need to use one or the other. 
             // actually it might be useful to have both, since the key to the _fighters hashmap is a string, the string version is needed
         _fightEntity.r_fighter_string = _data[i]['R_fighter'];
@@ -171,11 +174,11 @@ class _MyHomePageState extends State<MyHomePage> {
               : double.tryParse(_data[i]["B_avg_SIG_STR_pct"]) ?? -69420
             : -69420,
 
-            Initially, I wanted to do things nice and simple, like this: // avg_SIG_STR_landed: _data[i]["R_avg_SIG_STR_landed"]
+            Initially, I wanted to do things nice and simple, like this:  avg_SIG_STR_landed: _data[i]["R_avg_SIG_STR_landed"]
             But some values in the data set are numbers of String. So I used double.parse(). 
             But some values in the data set are just null, like in fight_id = 2, this is an actual piece of data: "B_avg_SIG_STR_pct": "",    You can't call double.parse on a null value without getting an error though.
 
-            So, here's what that block of code does:
+            So, here's what that thick ass block of code above does:
             Checks if _data[i]["B_avg_SIG_STR_pct"] is not null and not an empty string.
             If it's not null and not an empty string, it checks if it's already a double type.
             If it's already a double type, it assigns its value directly to avg_SIG_STR_pct.
@@ -269,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
             elo: [1200], // 1200 as a placeholder for now. Not sure how what to put here right now.
             fight_history: [_fightEntity], // I believe that if they aren't yet in the list, then this is their first ufc fight. This line returns a list of fightEntities, with the current fight entity (their firt UFC figh) being the 0th and only fight in the list.
             stance: _data[i]["R_Stance"],
-            wins: _data[i]["R_wins"],
+            //wins: _data[i]["R_wins"],
             age: _fightEntity.r_age,
             );
 
