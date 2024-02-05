@@ -1,4 +1,4 @@
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:equatable/equatable.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';

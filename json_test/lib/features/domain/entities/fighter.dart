@@ -1,4 +1,4 @@
-import 'dart:ffi';
+//import 'dart:ffi';
 
 import 'package:equatable/equatable.dart';
 import 'package:json_test/features/domain/entities/fight.dart';
@@ -27,7 +27,7 @@ class FighterEntity extends Equatable {
   double ? height_cms;
   double ? reach_cms;
  
-  List<int> ? elo;
+  List<int> ? elo; // this is a list so that we can display a fighter's elo over time, not just their current elo
 
   List<FightEntity> ? fight_history;
  

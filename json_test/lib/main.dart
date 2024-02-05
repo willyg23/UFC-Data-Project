@@ -6,6 +6,7 @@ import 'dart:convert';
 
 import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
+import 'package:json_test/features/domain/usecases/eloCalculations.dart';
 
 
 
@@ -65,8 +66,16 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
 
+
+/*
+note:
+before I had it as: final eloCalculator = eloCalculator(); 
+dart doesn't allow the object and the class name to be the same
+*/
+  final eloCalculatorObject = eloCalculator(); 
+  
   List _items = [];
-  //FightEntity _fightEntity = new FightEntity();
+  FightEntity _fightEntity = new FightEntity();
 
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
@@ -209,7 +218,7 @@ class _MyHomePageState extends State<MyHomePage> {
             // print("iteration # fight_id: ${_data[i]["fight_id"]}");
 
 
-          // because FightEntity's 'r_fighter_string' is nullable, and the hasmap's key is not nullable, we need to tell dart the value _fightEntity.r_fighter_string! isn't null
+          // because FightEntity's 'r_fighter_string' is nullable, and the hashmap's key is not nullable, we need to tell dart the value _fightEntity.r_fighter_string! isn't null
           // otherwise there's a type mismatch, as String != String ?
           //_fighters[_fightEntity.r_fighter_string!] = new FighterEntity(); 
           _fighters[_fightEntity.r_fighter_string!] = FighterEntity(
@@ -303,7 +312,7 @@ class _MyHomePageState extends State<MyHomePage> {
             //   print("shit is a double apparently");
             // } else if (_data[i]["B_avg_SIG_STR_pct"] is String) {
             //   avg_SIG_STR_pct = double.parse(_data[i]["B_avg_SIG_STR_pct"]);
-            //   print("shit is a string apparently");
+            //   print("this shit is a string apparently");
             // } else {
             //   // Handle other types or null values if necessary
             //   // For example, set avg_SIG_STR_pct to a default value
@@ -393,9 +402,19 @@ class _MyHomePageState extends State<MyHomePage> {
       print('Length of the _fighters hashmap: ${_fighters.length}');
       print('Length of the _fights list: ${_fights.length}');
 
+      
+
+      
+      int iter = 0;
       for (FightEntity fight in _fights) {
           print(fight.toString());
+        // print('# of successful iterations: ${iter}');
+        //   eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+          
       }
+      //print('Random Fighter elo _fighters hashamp: ${ _fighters[_fights[0].b_fighter_string]!.elo!.last} \n');
+
+      
 
       //  _fighters.forEach((key, value) {
       //     print('$key: $value');
@@ -414,10 +433,6 @@ class _MyHomePageState extends State<MyHomePage> {
       //   print('Random fight details:');
       //   print('Fight_ id: ${_fights[randomNumber].fight_id}\n R fighter: ${_fights[randomNumber].r_fighter_string}\n B fighter: ${_fights[randomNumber].b_fighter_string}\n Winner: ${_fights[randomNumber].winner}\n');
       // }
-
-
-
-
 
     });
 
