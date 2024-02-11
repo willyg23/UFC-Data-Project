@@ -75,7 +75,7 @@ dart doesn't allow the object and the class name to be the same
   final eloCalculatorObject = eloCalculator(); 
   
   List _items = [];
-  FightEntity _fightEntity = new FightEntity();
+  //FightEntity _fightEntity = new FightEntity();
 
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
@@ -402,17 +402,63 @@ dart doesn't allow the object and the class name to be the same
       print('Length of the _fighters hashmap: ${_fighters.length}');
       print('Length of the _fights list: ${_fights.length}');
 
+
       
 
       
       int iter = 0;
       for (FightEntity fight in _fights) {
-          print(fight.toString());
-        // print('# of successful iterations: ${iter}');
-        //   eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+          // print(fight.toString());
+        print('# of successful iterations: ${iter}');
+
+        if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null && _fighters != null){
+          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+        }
+        else{
+          print('fight.winner value: ${fight.winner}');
+          print('fight.r_fighter value: ${fight.r_fighter_string}');
+          print('fight.b_fighter value: ${fight.b_fighter_string}');
+          // print('fight.winner value: ${fight}');
+
+
+        }
+        
           
       }
       //print('Random Fighter elo _fighters hashamp: ${ _fighters[_fights[0].b_fighter_string]!.elo!.last} \n');
+
+// prints all fighter's fight histories
+      // _fighters.forEach((key, fighter) {
+      //   print('# of successful iterations: ${iter}');
+      //   List<FightEntity>? fightHistory = fighter.fight_history;
+      //   if (fightHistory != null) {
+      //     print('$key Fight History:');
+      //     for (FightEntity fight in fightHistory) {
+      //       print('  ${fight.toString()}');
+      //     }
+      //   }
+      //   iter = iter + 1;
+      // });
+
+      /*
+a lot of them look like this:
+Erin Blanchfield Fight History:
+  FightEntity(null, Erin Blanchfield, Sarah Alpar, Red, null, U-DEC, -435, 330, 22, 30, null, null, Women's Flyweight)
+# of successful iterations: 1343
+Rong Zhu Fight History:
+  FightEntity(null, Rong Zhu, Brandon Jenkins, Red, null, KO/TKO, -69420, 195, 21, 29, null, null, Lightweight)
+
+
+some of the more confusing ones look like this:
+Nate Maness Fight History:
+  FightEntity(null, Nate Maness, Tony Gravely, Red, null, KO/TKO, 170, -200, 30, 29, FighterEntity(Tony Gravely, [Bantamweight], null, MALE, 1, 0, 4.01, 0.54, 0.6, 6.11, 0.54, 0, 0, 1, 0, 1, 0, 0, 165.1, 175.26, [1200], [FightEntity(null, Tony Gravely, Anthony Birchak, Red, null, KO/TKO, -390, 320, 29, 34, FighterEntity(Anthony Birchak, [Bantamweight], null, MALE, 0, 1, 46, 0.42, 3, 3, 0.75, 1, 0, 0, 0, 0, 0, 0, 165.1, 165.1, [1200], [FightEntity(null, Anthony Birchak, Dileno Lopes, Red, null, S-DEC, -250, 210, 30, 31, null, FighterEntity(Anthony Birchak, [Bantamweight], null, MALE, 0, 1, 1, 0.11, 3, 0, 0, 0, 0, 0, 0, 0, 0, 0, 165.1, 162.56, [1200], [FightEntity(null, Anthony Birchak, Ian Entwistle, Blue, null, SUB, -270, 248, 28, 28, null, null, Bantamweight)], Orthodox, 0, 28, 0), Bantamweight)], Southpaw, 0, 30, 0), null, Bantamweight)], Orthodox, 0, 29, 0), null, Bantamweight)
+# of successful iterations: 1345
+Arman Tsarukyan Fight History:
+  FightEntity(null, Arman Tsarukyan, Christos Giagos, Red, null, KO/TKO, -850, 575, 24, 31, FighterEntity(Christos Giagos, [Lightweight], null, MALE, 2, 0, 3.98, 0.52, 0, 1.67, 0.3, 0, 0, 1, 3, 0, 0, 0, 175.26, 177.8, [1200], [FightEntity(null, Christos Giagos, Drakkar Klose, Blue, null, U-DEC, 165, -190, 29, 31, null, null, Lightweight)], Orthodox, 0, 29, 0), null, Lightweight)
+  
+  so here: fight_id is null, draw is null,                                                  | this part is the b_fighter_entity I believe                                                                                        | and then this is the b fighter's fight history?
+
+      */
 
       
 
