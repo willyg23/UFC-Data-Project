@@ -90,7 +90,7 @@ dart doesn't allow the object and the class name to be the same
 
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/sample.json');
+    final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
 
     //remove the 'final' from here? It depends how I plan to add fights. If I'm just going to release an update with an updated json file, then probably not.
     //changing or adding onto the amount of fights in the json via a function in the code seems way ovvercomplicated to just simply updating the JSON.
@@ -407,24 +407,24 @@ dart doesn't allow the object and the class name to be the same
 
       
       int iter = 0;
-      for (FightEntity fight in _fights) {
-          // print(fight.toString());
-        print('# of successful iterations: ${iter}');
+      // for (FightEntity fight in _fights) {
+      //     // print(fight.toString());
+      //   print('# of successful iterations: ${iter}');
 
-        if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null && _fighters != null){
-          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
-        }
-        else{
-          print('fight.winner value: ${fight.winner}');
-          print('fight.r_fighter value: ${fight.r_fighter_string}');
-          print('fight.b_fighter value: ${fight.b_fighter_string}');
-          // print('fight.winner value: ${fight}');
+      //   if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null && _fighters != null){
+      //     eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+      //   }
+      //   else{
+      //     print('fight.winner value: ${fight.winner}');
+      //     print('fight.r_fighter value: ${fight.r_fighter_string}');
+      //     print('fight.b_fighter value: ${fight.b_fighter_string}');
+      //     // print('fight.winner value: ${fight}');
 
 
-        }
+      //   }
         
           
-      }
+      // }
       //print('Random Fighter elo _fighters hashamp: ${ _fighters[_fights[0].b_fighter_string]!.elo!.last} \n');
 
 // prints all fighter's fight histories
