@@ -17,10 +17,11 @@ class FightEntity extends Equatable {
   int ? b_odds;
   int ? r_age;
   int ? b_age;
-  String ? weight_class;
   
   FighterEntity ? b_fighter_entity;
   FighterEntity ? r_fighter_entity;
+
+  String ? weight_class;
 
   FightEntity({
 
@@ -49,8 +50,8 @@ class FightEntity extends Equatable {
   List < Object ? > get props {
     return [
       fight_id,
-      r_fighter_string,
       b_fighter_string,
+      r_fighter_string,
       winner,
       draw,
       finish,

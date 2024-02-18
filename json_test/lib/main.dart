@@ -162,6 +162,8 @@ dart doesn't allow the object and the class name to be the same
         _fightEntity.finish = _data[i]['finish'];
         _fightEntity.r_age = _data[i]['R_age'];
         _fightEntity.b_age = _data[i]['B_age'];
+        _fightEntity.fight_id = _data[i]['fight_id'];
+
 
         // trying to figure out why both B and R_match_weightclass_rank has no value
         // print('Value of weight class rank: ${_data[i]["B_match_weightclass_rank"]}'); // is an int, has no value for some reason. was trying to parse it to an int, but you can't parse nothing into an int, without gettinga  FormatException.
@@ -289,6 +291,9 @@ dart doesn't allow the object and the class name to be the same
             
             );
 
+// make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
+            _fightEntity.r_fighter_entity = _fighters[_fightEntity.r_fighter_string];
+
         }
 
 
@@ -386,6 +391,10 @@ dart doesn't allow the object and the class name to be the same
             age: _fightEntity.r_age,
             losses: 0,
             );
+
+
+            // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
+            _fightEntity.b_fighter_entity = _fighters[_fightEntity.b_fighter_string];
         }
 
       }
@@ -407,21 +416,32 @@ dart doesn't allow the object and the class name to be the same
 
       
       int iter = 0;
-      // for (FightEntity fight in _fights) {
-      //     // print(fight.toString());
-      //   print('# of successful iterations: ${iter}');
+      for (FightEntity fight in _fights) {
+        print(fight.toString()); // first two fights are printed and then the error hits. so presumably the 3rd fight is the wrong one
+        
+        //in the fight entities i'm noticting that the fight_id is null, draw is null (which makes sense since we're not constructing it), and both of the fighter entites are null
+        // ^fixed^
+        print('# of successful iterations: ${iter}');
+        iter = iter + 1;
 
-      //   if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null && _fighters != null){
-      //     eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
-      //   }
-      //   else{
-      //     print('fight.winner value: ${fight.winner}');
-      //     print('fight.r_fighter value: ${fight.r_fighter_string}');
-      //     print('fight.b_fighter value: ${fight.b_fighter_string}');
-      //     // print('fight.winner value: ${fight}');
+        if(fight.b_fighter_string == null){ 
+          print('b fighter that is null fight id: ${fight.fight_id}');
+        }
+
+        if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
+          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+        }
+        else{
+          print('ENTERING THE ELSE STATEMENT'); 
+          print('fight.winner value: ${fight.winner}');
+          print('fight.r_fighter value: ${fight.r_fighter_string}');
+          print('fight.b_fighter value: ${fight.b_fighter_string}');
+          print('fight.winner value: ${fight}');
 
 
-      //   }
+        }
+
+      }
         
           
       // }
@@ -480,7 +500,7 @@ Arman Tsarukyan Fight History:
       //   print('Fight_ id: ${_fights[randomNumber].fight_id}\n R fighter: ${_fights[randomNumber].r_fighter_string}\n B fighter: ${_fights[randomNumber].b_fighter_string}\n Winner: ${_fights[randomNumber].winner}\n');
       // }
 
-    });
+    }); //set state end
 
     // setState(() {
     //   _items = data;
@@ -566,7 +586,7 @@ Arman Tsarukyan Fight History:
 //       print(testFight1.b_age);
 //     });
 
-  }
+  } // readJson end
 
   @override
   Widget build(BuildContext context) {

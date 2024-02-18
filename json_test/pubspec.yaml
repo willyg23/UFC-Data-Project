@@ -68,7 +68,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - assets/sample.json
+    # - assets/sample.json
     #- assets/labels.txt #ML stuff
     #- assets/<file_name>.tflite #ML stuff
     - lib/features/data/data_sources/ufc_data.json
