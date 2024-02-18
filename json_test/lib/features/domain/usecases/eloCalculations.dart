@@ -38,9 +38,21 @@ class eloCalculator{
     double kFactor = 20.0;
     double expectedScore = 0.0;
     int newRating = 0;
+    
+    if (fighterHashMap[r_fighter] == null) {
+      print("FIGHTER NOT FOUND R: ${r_fighter} -- ${fighterHashMap[r_fighter]}");
+      return;
+    }
+     
+    if (fighterHashMap[b_fighter] == null) {
+      print("FIGHTER NOT FOUND B: ${b_fighter} -- ${fighterHashMap[b_fighter]}");
+      return;
+    }
 
     if(winner == "Red"){
       FighterEntity winnerEntity = fighterHashMap[r_fighter]!; // the exclamation point tells dart that this value is not going to be null.
+      
+      // error: b fighter is not found in hashMap
       FighterEntity loserEntity = fighterHashMap[b_fighter]!;
       
       //update winner's record

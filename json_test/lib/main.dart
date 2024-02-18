@@ -326,10 +326,10 @@ dart doesn't allow the object and the class name to be the same
             // }
 
 
+        //_side = "B"
 
-
-         _fighters[_fightEntity.r_fighter_string!] = FighterEntity(
-            name: _fightEntity.r_fighter_string,
+         _fighters[_fightEntity.b_fighter_string!] = FighterEntity(
+            name: _fightEntity.b_fighter_string,
             weight_classes: [_fightEntity.weight_class!], //  weight_classes is a list containing just "_fightEntity.weight_class". Doesn't account for fighters who fight in multiple weight classes. 
             //weight_class_rank: [int.parse(_data[i]["R_match_weightclass_rank"])],  commented out until bug is fixed
             gender: _data[i]["gender"],
@@ -417,11 +417,11 @@ dart doesn't allow the object and the class name to be the same
       
       int iter = 0;
       for (FightEntity fight in _fights) {
-        print(fight.toString()); // first two fights are printed and then the error hits. so presumably the 3rd fight is the wrong one
+        //print(fight.toString()); // first two fights are printed and then the error hits. so presumably the 3rd fight is the wrong one
         
         //in the fight entities i'm noticting that the fight_id is null, draw is null (which makes sense since we're not constructing it), and both of the fighter entites are null
         // ^fixed^
-        print('# of successful iterations: ${iter}');
+        //print('# of successful iterations: ${iter}');
         iter = iter + 1;
 
         if(fight.b_fighter_string == null){ 
@@ -437,12 +437,19 @@ dart doesn't allow the object and the class name to be the same
           print('fight.r_fighter value: ${fight.r_fighter_string}');
           print('fight.b_fighter value: ${fight.b_fighter_string}');
           print('fight.winner value: ${fight}');
-
-
         }
 
       }
+
+
+      // lets print the fighter with the highest ELO
+
+      // print(_fighters.keys.toList());
         
+
+      //  _fighters.forEach((key, value) {
+      //     print('$key: $value');
+      //   });
           
       // }
       //print('Random Fighter elo _fighters hashamp: ${ _fighters[_fights[0].b_fighter_string]!.elo!.last} \n');
