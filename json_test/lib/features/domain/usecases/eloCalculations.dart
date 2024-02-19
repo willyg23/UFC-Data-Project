@@ -8,7 +8,6 @@ import 'dart:math';
 
 class eloCalculator{
 
-
     /*
       notes:
       
@@ -23,8 +22,36 @@ class eloCalculator{
       both get the most recent elo rating that the fighter has had
 
     */
-  int calculateNewRating(double gameResult, double expectedScore, double kFactor, int fighterElo, FighterEntity fighter) {
+
+    /*
+      adding extra elo gain and/or loss on wins/losses by KO/TKO,SUB,U-DEC,M-DEC, and S-DEC.  thoughts:
+
+      frontend: you can toggle a button for any of these categories. upon toggle, a field pops up where you can enter in a number for the modifier (ex: 5, signifying 5 extra elo points on the category). 
+      will probably need to cast param input to an int (or whatever the needed data type is) to idiot-proof)
+
+      backend: we'll use submissions as an example.
+      
+      (fixed number, non percentage example)
+      add int SUB_modifier_param as a param
+      int SUB_modifier = SUB_modifier_param != null ? SUB_modifier_param : 0
+
+      (percentage example)
+      have the input be captured so that if a user enter '10' for 10 percent, SUB_modifier_param is set to 1.1
+
+      add double SUB_modifier_param as a param
+      double SUB_modifier = SUB_modifier_param != null ? SUB_modifier_param : 1.0
+    */
+
+   
+
+  int calculateNewRating(double gameResult, double expectedScore, double kFactor, int fighterElo, FighterEntity fighter, double SUB_modifier_param) {
       int newRating = fighterElo + (kFactor * (gameResult - expectedScore)).toInt();
+      //if SUB_modifier_param is not null
+        //SUB_modifier = SUB_modifier_param
+      //else
+        //
+      double SUB_modifier = SUB_modifier_param ?? 1.0;
+      newRating = (newRating * SUB_modifier_param).toInt();
       return newRating;
     }
 
@@ -32,7 +59,6 @@ class eloCalculator{
   double getExpectedScore(int opponentRating, int fighterElo) { // is opponent rating the opponent's elo?
       return 1.0 / (1.0 + pow(10.0, ((opponentRating - fighterElo).toDouble() / 400.0)));
   }
-
 
   void setNewRating(String winner, String r_fighter, String b_fighter, Map<String,FighterEntity> fighterHashMap) {
         
