@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
+// import 'dart:async';
 
 
 
@@ -98,7 +99,7 @@ dart doesn't allow the object and the class name to be the same
     // So 'List<dynamic>' means that the list data can contain elements of any type.
     final List<dynamic> _data = json.decode(response)['items']; // should you be doing final here?
     Random random = Random();
-
+    print('is this thing on?');
     // print("  _items.length: ${_items.length}");
     // print("  data.length: ${data.length}");
     // print("  R_Fighter: ${_items[1]['id']}");
@@ -443,6 +444,24 @@ dart doesn't allow the object and the class name to be the same
 
 
       // lets print the fighter with the highest ELO
+      // .entries is all of the items in the map in a class "MapEntry" which has 2 properies "key" and "value"
+    // hover over toList to see the type that it returns
+    // ! == i know this isn't null, throw an error if it is
+    // ? == I know this isn't null, set it to a default value if it is, typically zero
+    // MapEntry == single entry in a hashMap. A hashmap is a collection of these where you can search by these.
+    List<MapEntry<String, FighterEntity>> sortedFighters = _fighters.entries.toList()
+      ..sort((a, b) => a.value.elo!.last.compareTo(b.value.elo!.last));
+
+    for (MapEntry mapEntry in sortedFighters) {
+      //mapEntry.key should be the fighter's name 
+      // Maybe add a win - loss record after elo
+      print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}'); // .elo doesn't show up on the .value part, wrong?
+    // invoke deez nuts in production code dart
+    }
+    
+      /*
+    
+      */
 
       // print(_fighters.keys.toList());
         
