@@ -41,11 +41,6 @@ class FightEntity extends Equatable {
 
   });
 
-  // String setr_fighter(String input){
-  //   return input;
-  // }
-
-
   @override
   List < Object ? > get props {
     return [
