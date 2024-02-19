@@ -320,6 +320,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         //   print('b fighter that is null fight id: ${fight.fight_id}');
         // }
 
+// we do this if statemente because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
         }
@@ -332,6 +333,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
     // ! == i know this isn't null, throw an error if it is
     // ? == I know this isn't null, set it to a default value if it is, typically zero
     // MapEntry == single entry in a hashMap. A hashmap is a collection of these where you can search by these.
+    // toList is of type List<MapEntry<String, FighterEntity>>, sortedFighters needs to be the same to match.
     List<MapEntry<String, FighterEntity>> sortedFighters = _fighters.entries.toList()
       ..sort((a, b) => a.value.elo!.last.compareTo(b.value.elo!.last));
 

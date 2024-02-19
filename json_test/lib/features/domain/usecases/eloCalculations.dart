@@ -57,21 +57,23 @@ class eloCalculator{
     loserEntity.losses = (loserEntity.losses ?? 0) + 1;      
     fighterHashMap[loserStr] = loserEntity;
 
-    //setting new rating for winner, which is red
+    //setting new rating for winner
     kFactor = (winnerEntity.elo![winnerEntity.elo!.length - 1] > 2500) ? 15.0 : 20.0;
     expectedScore = getExpectedScore(loserEntity.elo![loserEntity.elo!.length - 1],winnerEntity.elo![winnerEntity.elo!.length - 1]);
 
     winnerNewRating = calculateNewRating(1.0, expectedScore, kFactor, winnerEntity.elo![winnerEntity.elo!.length - 1], winnerEntity);
     //winnerEntity.elo!.add(newRating); // this affects getExpectedScore when it's called for the loser
 
-    //setting new rating for loser, which is blue
+    //setting new rating for loser
     kFactor = (loserEntity.elo![loserEntity.elo!.length - 1] > 2500) ? 15.0 : 20.0;
     expectedScore = getExpectedScore(winnerEntity.elo![winnerEntity.elo!.length - 1],loserEntity.elo![loserEntity.elo!.length - 1]);
     
     loserNewRating = calculateNewRating(0.0, expectedScore, kFactor, loserEntity.elo![loserEntity.elo!.length - 1], loserEntity);
     
     /*
-    add these new ratings both at the end. if you were to add the winner's new rating before you got tge expected score for 
+    add these new ratings both at the end. if you were to add the winner's new rating before you got the expected score for the loser, then the expected
+    score for the loser would be calculated of the winner's elo after the match, not at the time of the match. 
+    This leads to the loser having less of a penalty for losing.
     */ 
     winnerEntity.elo!.add(winnerNewRating);
     loserEntity.elo!.add(loserNewRating);
