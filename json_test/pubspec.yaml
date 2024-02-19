@@ -36,6 +36,7 @@ dependencies:
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
   equatable: ^2.0.5
+  tflite: ^1.1.2
 
 dev_dependencies:
   flutter_test:
@@ -67,7 +68,10 @@ flutter:
   #   - images/a_dot_ham.jpeg
 
   assets:
-    - assets/sample.json
+    # - assets/sample.json
+    #- assets/labels.txt #ML stuff
+    #- assets/<file_name>.tflite #ML stuff
+    - lib/features/data/data_sources/ufc_data.json
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

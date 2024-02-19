@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
+// import 'dart:async';
 
 
 
@@ -90,7 +91,7 @@ dart doesn't allow the object and the class name to be the same
 
 
   Future<void> readJson() async {
-    final String response = await rootBundle.loadString('assets/sample.json');
+    final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
 
     //remove the 'final' from here? It depends how I plan to add fights. If I'm just going to release an update with an updated json file, then probably not.
     //changing or adding onto the amount of fights in the json via a function in the code seems way ovvercomplicated to just simply updating the JSON.
@@ -98,7 +99,7 @@ dart doesn't allow the object and the class name to be the same
     // So 'List<dynamic>' means that the list data can contain elements of any type.
     final List<dynamic> _data = json.decode(response)['items']; // should you be doing final here?
     Random random = Random();
-
+    print('is this thing on?');
     // print("  _items.length: ${_items.length}");
     // print("  data.length: ${data.length}");
     // print("  R_Fighter: ${_items[1]['id']}");
@@ -162,6 +163,8 @@ dart doesn't allow the object and the class name to be the same
         _fightEntity.finish = _data[i]['finish'];
         _fightEntity.r_age = _data[i]['R_age'];
         _fightEntity.b_age = _data[i]['B_age'];
+        _fightEntity.fight_id = _data[i]['fight_id'];
+
 
         // trying to figure out why both B and R_match_weightclass_rank has no value
         // print('Value of weight class rank: ${_data[i]["B_match_weightclass_rank"]}'); // is an int, has no value for some reason. was trying to parse it to an int, but you can't parse nothing into an int, without gettinga  FormatException.
@@ -289,6 +292,9 @@ dart doesn't allow the object and the class name to be the same
             
             );
 
+// make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
+            _fightEntity.r_fighter_entity = _fighters[_fightEntity.r_fighter_string];
+
         }
 
 
@@ -321,10 +327,10 @@ dart doesn't allow the object and the class name to be the same
             // }
 
 
+        //_side = "B"
 
-
-         _fighters[_fightEntity.r_fighter_string!] = FighterEntity(
-            name: _fightEntity.r_fighter_string,
+         _fighters[_fightEntity.b_fighter_string!] = FighterEntity(
+            name: _fightEntity.b_fighter_string,
             weight_classes: [_fightEntity.weight_class!], //  weight_classes is a list containing just "_fightEntity.weight_class". Doesn't account for fighters who fight in multiple weight classes. 
             //weight_class_rank: [int.parse(_data[i]["R_match_weightclass_rank"])],  commented out until bug is fixed
             gender: _data[i]["gender"],
@@ -386,6 +392,10 @@ dart doesn't allow the object and the class name to be the same
             age: _fightEntity.r_age,
             losses: 0,
             );
+
+
+            // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
+            _fightEntity.b_fighter_entity = _fighters[_fightEntity.b_fighter_string];
         }
 
       }
@@ -408,23 +418,59 @@ dart doesn't allow the object and the class name to be the same
       
       int iter = 0;
       for (FightEntity fight in _fights) {
-          // print(fight.toString());
-        print('# of successful iterations: ${iter}');
+        //print(fight.toString()); // first two fights are printed and then the error hits. so presumably the 3rd fight is the wrong one
+        
+        //in the fight entities i'm noticting that the fight_id is null, draw is null (which makes sense since we're not constructing it), and both of the fighter entites are null
+        // ^fixed^
+        //print('# of successful iterations: ${iter}');
+        iter = iter + 1;
 
-        if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null && _fighters != null){
+        if(fight.b_fighter_string == null){ 
+          print('b fighter that is null fight id: ${fight.fight_id}');
+        }
+
+        if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
         }
         else{
+          print('ENTERING THE ELSE STATEMENT'); 
           print('fight.winner value: ${fight.winner}');
           print('fight.r_fighter value: ${fight.r_fighter_string}');
           print('fight.b_fighter value: ${fight.b_fighter_string}');
-          // print('fight.winner value: ${fight}');
-
-
+          print('fight.winner value: ${fight}');
         }
-        
-          
+
       }
+
+
+      // lets print the fighter with the highest ELO
+      // .entries is all of the items in the map in a class "MapEntry" which has 2 properies "key" and "value"
+    // hover over toList to see the type that it returns
+    // ! == i know this isn't null, throw an error if it is
+    // ? == I know this isn't null, set it to a default value if it is, typically zero
+    // MapEntry == single entry in a hashMap. A hashmap is a collection of these where you can search by these.
+    List<MapEntry<String, FighterEntity>> sortedFighters = _fighters.entries.toList()
+      ..sort((a, b) => a.value.elo!.last.compareTo(b.value.elo!.last));
+
+    for (MapEntry mapEntry in sortedFighters) {
+      //mapEntry.key should be the fighter's name 
+      // Maybe add a win - loss record after elo
+      print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}'); // .elo doesn't show up on the .value part, wrong?
+    // invoke deez nuts in production code dart
+    }
+    
+      /*
+    
+      */
+
+      // print(_fighters.keys.toList());
+        
+
+      //  _fighters.forEach((key, value) {
+      //     print('$key: $value');
+      //   });
+          
+      // }
       //print('Random Fighter elo _fighters hashamp: ${ _fighters[_fights[0].b_fighter_string]!.elo!.last} \n');
 
 // prints all fighter's fight histories
@@ -480,7 +526,7 @@ Arman Tsarukyan Fight History:
       //   print('Fight_ id: ${_fights[randomNumber].fight_id}\n R fighter: ${_fights[randomNumber].r_fighter_string}\n B fighter: ${_fights[randomNumber].b_fighter_string}\n Winner: ${_fights[randomNumber].winner}\n');
       // }
 
-    });
+    }); //set state end
 
     // setState(() {
     //   _items = data;
@@ -566,7 +612,7 @@ Arman Tsarukyan Fight History:
 //       print(testFight1.b_age);
 //     });
 
-  }
+  } // readJson end
 
   @override
   Widget build(BuildContext context) {
