@@ -49,9 +49,9 @@ class eloCalculator{
       //if SUB_modifier_param is not null
         //SUB_modifier = SUB_modifier_param
       //else
-        //
+        // SUB_modifier = 1.0
       double SUB_modifier = SUB_modifier_param ?? 1.0;
-      newRating = (newRating * SUB_modifier_param).toInt();
+      newRating = (newRating * SUB_modifier).toInt();
       return newRating;
     }
 
