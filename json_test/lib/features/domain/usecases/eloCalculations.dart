@@ -56,7 +56,7 @@ class eloCalculator{
           newRating = (newRating * 1.0).toInt(); // if item is null the app will crash
         }
         else{
-          newRating = (newRating * item!).toInt(); // if item is null the app will crash
+          newRating = (newRating * (item! / 100)).toInt(); // if item is null the app will crash
         }
         
       }
