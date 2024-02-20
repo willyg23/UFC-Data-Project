@@ -51,12 +51,15 @@ class eloCalculator{
       // double SUB_modifier = SUB_modifier_param ?? 1.0;
       
       for (double? item in modifierList){
+        
         // need to check if the item is null. if it is, we set it to 1.0
         if(item == null){
-          newRating = (newRating * 1.0).toInt(); // if item is null the app will crash
+         
+          newRating = newRating; // I think this is redundant
         }
         else{
-          newRating = (newRating * (item! / 100)).toInt(); // if item is null the app will crash
+           //               ↓ use fighter elo instead of newRating. because we want a % increase on the math that is occuring on their old rating. applying it to their new rating would give them a bigger buff that isn't accurate.
+          newRating += (fighterElo * (item! / 100)).toInt(); // if item is null the app will crash.  // /100 is so that users can input "5" and have a modifier of 5 percent
         }
         
       }

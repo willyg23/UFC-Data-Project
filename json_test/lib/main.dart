@@ -317,7 +317,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
       //modifiers testing variables
       
       List<double?> _modifiers = [];
-      double? subInput = 10.0; // precent that you want to modify by
+      double? subInput = 1.0; // precent that you want to modify by
       _modifiers.add(subInput);
 
 
