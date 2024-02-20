@@ -314,6 +314,13 @@ but that doesn't work, because dart doesn't allow the object and the class name 
       print('Length of the _fighters hashmap: ${_fighters.length}');
       print('Length of the _fights list: ${_fights.length}');
 
+      //modifiers testing variables
+      
+      List<double?> _modifiers = [];
+      double? subInput = 5.0;
+      _modifiers.add(subInput);
+
+
       for (FightEntity fight in _fights) {
               
         // if(fight.b_fighter_string == null){ 
@@ -322,7 +329,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
 // we do this if statemente because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
-          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
         }
       }
 
@@ -337,10 +344,13 @@ but that doesn't work, because dart doesn't allow the object and the class name 
     List<MapEntry<String, FighterEntity>> sortedFighters = _fighters.entries.toList()
       ..sort((a, b) => a.value.elo!.last.compareTo(b.value.elo!.last));
 
+
+    int q = sortedFighters.length + 1;
     for (MapEntry mapEntry in sortedFighters) {
+      q = q - 1;
       //mapEntry.key is the fighter's name  (key of the map entry)
       //mapEntry.value is the fighter entity (value of the map entry)
-      print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}'); // any . function after shows up as grey in the IDE but still works just fine. worth noting just in case.
+      print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}  Rank: ${q}'); // any . function after shows up as grey in the IDE but still works just fine. worth noting just in case.
     // invoke deez nuts in production code dart
     }
     

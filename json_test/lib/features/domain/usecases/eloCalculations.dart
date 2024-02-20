@@ -44,23 +44,32 @@ class eloCalculator{
 
    
 
-  int calculateNewRating(double gameResult, double expectedScore, double kFactor, int fighterElo, FighterEntity fighter, double SUB_modifier_param) {
+  int calculateNewRating(double gameResult, double expectedScore, double kFactor, int fighterElo, FighterEntity fighter, List<double?> modifierList) {
       int newRating = fighterElo + (kFactor * (gameResult - expectedScore)).toInt();
-      //if SUB_modifier_param is not null
-        //SUB_modifier = SUB_modifier_param
-      //else
-        // SUB_modifier = 1.0
-      double SUB_modifier = SUB_modifier_param ?? 1.0;
-      newRating = (newRating * SUB_modifier).toInt();
+
+      //if SUB_modifier_param != null, SUB_modifier = SUB_modifier_param.    else, SUB_modifier = 1.0
+      // double SUB_modifier = SUB_modifier_param ?? 1.0;
+      
+      for (double? item in modifierList){
+        // need to check if the item is null. if it is, we set it to 1.0
+        if(item == null){
+          newRating = (newRating * 1.0).toInt(); // if item is null the app will crash
+        }
+        else{
+          newRating = (newRating * item!).toInt(); // if item is null the app will crash
+        }
+        
+      }
+      
       return newRating;
-    }
+  }
 
   //fighterElo is the elo of who the function is currently be appplied to, not their opponent
   double getExpectedScore(int opponentRating, int fighterElo) { // is opponent rating the opponent's elo?
-      return 1.0 / (1.0 + pow(10.0, ((opponentRating - fighterElo).toDouble() / 400.0)));
+    return 1.0 / (1.0 + pow(10.0, ((opponentRating - fighterElo).toDouble() / 400.0)));
   }
 
-  void setNewRating(String winner, String r_fighter, String b_fighter, Map<String,FighterEntity> fighterHashMap) {
+  void setNewRating(String winner, String r_fighter, String b_fighter, Map<String,FighterEntity> fighterHashMap, List<double?> modifierList) {
         
     double kFactor = 20.0;
     double expectedScore = 0.0;
@@ -87,14 +96,14 @@ class eloCalculator{
     kFactor = (winnerEntity.elo![winnerEntity.elo!.length - 1] > 2500) ? 15.0 : 20.0;
     expectedScore = getExpectedScore(loserEntity.elo![loserEntity.elo!.length - 1],winnerEntity.elo![winnerEntity.elo!.length - 1]);
 
-    winnerNewRating = calculateNewRating(1.0, expectedScore, kFactor, winnerEntity.elo![winnerEntity.elo!.length - 1], winnerEntity);
+    winnerNewRating = calculateNewRating(1.0, expectedScore, kFactor, winnerEntity.elo![winnerEntity.elo!.length - 1], winnerEntity, modifierList);
     //winnerEntity.elo!.add(newRating); // this affects getExpectedScore when it's called for the loser
 
     //setting new rating for loser
     kFactor = (loserEntity.elo![loserEntity.elo!.length - 1] > 2500) ? 15.0 : 20.0;
     expectedScore = getExpectedScore(winnerEntity.elo![winnerEntity.elo!.length - 1],loserEntity.elo![loserEntity.elo!.length - 1]);
     
-    loserNewRating = calculateNewRating(0.0, expectedScore, kFactor, loserEntity.elo![loserEntity.elo!.length - 1], loserEntity);
+    loserNewRating = calculateNewRating(0.0, expectedScore, kFactor, loserEntity.elo![loserEntity.elo!.length - 1], loserEntity, modifierList);
     
     /*
     add these new ratings both at the end. if you were to add the winner's new rating before you got the expected score for the loser, then the expected
