@@ -50,8 +50,14 @@ class eloCalculator{
       //if SUB_modifier_param != null, SUB_modifier = SUB_modifier_param.    else, SUB_modifier = 1.0
       // double SUB_modifier = SUB_modifier_param ?? 1.0;
       
+
+      /* 
+      even with subInput (in main) set to 1.0, it still seems to have way to much of an impact for my math / logic to be correct. as it increases all the top ranking by ~300 elo. can't tell how accurate.
+      expected charles oliveira to be #1, but the top 3 is Donald Cerrone, Dustin Poirier, and Charles Oliveira. Which is plausible I guess? More concerned about the +300 in elo for almost everyone. that seems wrong.
+      and brev how tf is donald cerrone the goat.
+      */
       for (double? item in modifierList){
-        
+
         // need to check if the item is null. if it is, we set it to 1.0
         if(item == null){
          
