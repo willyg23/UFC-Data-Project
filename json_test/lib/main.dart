@@ -132,6 +132,11 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         _fightEntity.r_age = _data[i]['R_age'];
         _fightEntity.b_age = _data[i]['B_age'];
         _fightEntity.fight_id = _data[i]['fight_id'];
+        String dateToParse = _data[i]['date'];
+        dateToParse.replaceAll(RegExp(r'/'), '');
+        int dtp2 = int.parse(dateToParse);
+        
+        _fightEntity.date = dtp2;
 
         _fights.add(_fightEntity);
 
@@ -317,7 +322,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
       //modifiers testing variables
       
       List<double?> _modifiers = [];
-      double? subInput = 1.0; // precent that you want to modify by
+      double? subInput = null; // precent that you want to modify by
       _modifiers.add(subInput);
 
 
