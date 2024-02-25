@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
+import 'package:intl/intl.dart';
 // import 'dart:async';
 
 
@@ -132,6 +133,19 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         _fightEntity.r_age = _data[i]['R_age'];
         _fightEntity.b_age = _data[i]['B_age'];
         _fightEntity.fight_id = _data[i]['fight_id'];
+
+        String dateToParse = _data[i]['date']; // Assuming format like "MM/DD/YYYY"
+
+        // Customize the DateFormat if your input is different
+        var dateFormat = DateFormat("MM/dd/yyyy"); 
+        DateTime parsedDate = dateFormat.parse(dateToParse); 
+
+        int year = parsedDate.year; 
+        int month = parsedDate.month;
+        int day = parsedDate.day;
+        _fightEntity.year = year;
+        _fightEntity.month = month;
+        _fightEntity.day = day;
 
         _fights.add(_fightEntity);
 
@@ -314,6 +328,13 @@ but that doesn't work, because dart doesn't allow the object and the class name 
       print('Length of the _fighters hashmap: ${_fighters.length}');
       print('Length of the _fights list: ${_fights.length}');
 
+      //modifiers testing variables
+      
+      List<double?> _modifiers = [];
+      double? subInput = null; // precent that you want to modify by
+      _modifiers.add(subInput);
+
+
       for (FightEntity fight in _fights) {
               
         // if(fight.b_fighter_string == null){ 
@@ -322,8 +343,9 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
 // we do this if statemente because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
-          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters);
+          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
         }
+       // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
 
 
@@ -337,10 +359,13 @@ but that doesn't work, because dart doesn't allow the object and the class name 
     List<MapEntry<String, FighterEntity>> sortedFighters = _fighters.entries.toList()
       ..sort((a, b) => a.value.elo!.last.compareTo(b.value.elo!.last));
 
+
+    int q = sortedFighters.length + 1;
     for (MapEntry mapEntry in sortedFighters) {
+      q = q - 1;
       //mapEntry.key is the fighter's name  (key of the map entry)
       //mapEntry.value is the fighter entity (value of the map entry)
-      print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}'); // any . function after shows up as grey in the IDE but still works just fine. worth noting just in case.
+      print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}  Rank: ${q}'); // any . function after shows up as grey in the IDE but still works just fine. worth noting just in case.
     // invoke deez nuts in production code dart
     }
     

@@ -23,6 +23,10 @@ class FightEntity extends Equatable {
 
   String ? weight_class;
 
+  int ? year;
+  int ? month;
+  int ? day;
+
   FightEntity({
 
     this.fight_id,
@@ -38,6 +42,9 @@ class FightEntity extends Equatable {
     this.b_fighter_entity,
     this.r_fighter_entity,
     this.weight_class,
+    this.year,
+    this.month,
+    this.day,
 
   });
 
@@ -57,6 +64,9 @@ class FightEntity extends Equatable {
       b_fighter_entity,
       r_fighter_entity,
       weight_class,
+      year,
+      month,
+      day,
     ];
   }
 

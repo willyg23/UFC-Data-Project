@@ -27,6 +27,8 @@ class FighterEntity extends Equatable {
   double ? height_cms;
   double ? reach_cms;
  
+
+ //idea. make a list that has elo and time (of the bout) correlated, so that way it's super easy to to make the graph. you could do this within one data structure. or have two lists that are correlated with each other
   List<int> ? elo; // this is a list so that we can display a fighter's elo over time, not just their current elo
 
   List<FightEntity> ? fight_history;
