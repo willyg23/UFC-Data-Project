@@ -7,6 +7,7 @@ import 'dart:convert';
 import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
+import 'package:intl/intl.dart';
 // import 'dart:async';
 
 
@@ -132,11 +133,19 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         _fightEntity.r_age = _data[i]['R_age'];
         _fightEntity.b_age = _data[i]['B_age'];
         _fightEntity.fight_id = _data[i]['fight_id'];
-        String dateToParse = _data[i]['date'];
-        dateToParse.replaceAll(RegExp(r'/'), '');
-        int dtp2 = int.parse(dateToParse);
-        
-        _fightEntity.date = dtp2;
+
+        String dateToParse = _data[i]['date']; // Assuming format like "MM/DD/YYYY"
+
+        // Customize the DateFormat if your input is different
+        var dateFormat = DateFormat("MM/dd/yyyy"); 
+        DateTime parsedDate = dateFormat.parse(dateToParse); 
+
+        int year = parsedDate.year; 
+        int month = parsedDate.month;
+        int day = parsedDate.day;
+
+  
+        //_fightEntity.date = dtp2;
 
         _fights.add(_fightEntity);
 
