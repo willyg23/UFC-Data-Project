@@ -143,9 +143,9 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         int year = parsedDate.year; 
         int month = parsedDate.month;
         int day = parsedDate.day;
-
-  
-        //_fightEntity.date = dtp2;
+        _fightEntity.year = year;
+        _fightEntity.month = month;
+        _fightEntity.day = day;
 
         _fights.add(_fightEntity);
 
@@ -345,6 +345,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
         }
+       // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
 
 
