@@ -317,12 +317,15 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             losses: 0,
             );
 
-
             // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
             _fightEntity.b_fighter_entity = _fighters[_fightEntity.b_fighter_string];
         }
 
       }
+
+
+
+
 
       print('Creation of _fighters hasmap and _fights list has been completed! ');
       print('Length of the _fighters hashmap: ${_fighters.length}');
