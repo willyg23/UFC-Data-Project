@@ -76,7 +76,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 */
   final eloCalculatorObject = eloCalculator(); 
   
-  List _items = [];
+  
 
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
