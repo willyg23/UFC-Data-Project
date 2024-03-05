@@ -76,6 +76,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 */
   final eloCalculatorObject = eloCalculator(); 
   
+  
 
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
@@ -324,7 +325,13 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
       }
 
-
+/*
+some frontend goals:
+have a toggle checkbox for each modifier
+when the toggle is cilcked, have an input box appear for users to enter what percent they want the increase or decrease to be by.
+have it be so +50% is 1.5, not .5, -50% is .5,
+maybe have anothe box appear for the input to be positive or negative?
+*/
 
 
 
