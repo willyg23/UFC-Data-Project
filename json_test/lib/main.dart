@@ -76,7 +76,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 */
   final eloCalculatorObject = eloCalculator(); 
   
-  List _items = [];
 
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
@@ -114,6 +113,8 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
         _fightEntity.winner = _data[i]['Winner'];
        
+
+       // explanation for what's going on in code blocks like this can be found a little bit lower
         dynamic rOddsValue = _data[i]['R_odds'];
         _fightEntity.r_odds = rOddsValue != null && rOddsValue != ""
             ? rOddsValue is int
