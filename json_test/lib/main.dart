@@ -341,9 +341,19 @@ maybe have anothe box appear for the input to be positive or negative?
 
       //modifiers testing variables
       
+/*
+      I think that using doubles is doing something crazy with the math. If I put in 50.0 for either modifier, that should be a 50% increase in elo gain, per win via 
+      the modifer that was chosen. Yet people's rankings end up in the billions. 
+      Right now it's a 50% increase in all fighter's elos because my code is wrong. But even then, fighters elos going into the billions is not a 50% increase.
+      I vaguely remember learning about how doubles can do weird stuff if you don't use them correctly. So I'm going to look into that. Maybe I just end up using ints?
+      But if I'm going to do a modifier that's based on percentage, I'm pretty sure something will turn into a double at some point. I'll look into whether or not I
+      have to use doubles here.
+*/
       List<double?> _modifiers = [];
-      double? subInput = null; // precent that you want to modify by
-      _modifiers.add(subInput);
+      double? sub_win_input = null; // precent that you want to modify by
+      double? ko_tko_input = null;
+      _modifiers.add(sub_win_input);
+      _modifiers.add(ko_tko_input);
 
 
       for (FightEntity fight in _fights) {
@@ -352,7 +362,7 @@ maybe have anothe box appear for the input to be positive or negative?
         //   print('b fighter that is null fight id: ${fight.fight_id}');
         // }
 
-// we do this if statemente because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
+// we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
         }

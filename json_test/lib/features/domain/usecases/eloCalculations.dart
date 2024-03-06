@@ -44,6 +44,11 @@ class eloCalculator{
 
    
 
+
+/*
+pretty sure this currently doesn't work properly. becuase we don't check to see what manner the fight was won in.
+so you could get a knockout win, but if subModifier was set to 5.0, the winner would still get sub bonus. and actually I think the loser does too.
+*/
   int calculateNewRating(double gameResult, double expectedScore, double kFactor, int fighterElo, FighterEntity fighter, List<double?> modifierList) {
       int newRating = fighterElo + (kFactor * (gameResult - expectedScore)).toInt();
 
