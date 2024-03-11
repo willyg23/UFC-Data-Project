@@ -11,7 +11,13 @@ import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
 // import 'dart:async';
 
+class EloData {
+  final DateTime timestamp;
+  final int elo;
+  final String fighterId; 
 
+  EloData(this.timestamp, this.elo, this.fighterId);
+}
 
 void main() {
   runApp(const MyApp());
@@ -68,6 +74,37 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
+  List<charts.Series<EloData, DateTime>> _generateChartData() {
+    List<charts.Series<EloData, DateTime>> seriesList = [];
+
+    eloHashMap.forEach((key, elo) {
+      // Parse key to get fighter name and date
+      var parts = key.split('-'); 
+      var fighterName = parts[0];
+      var year = int.parse(parts[1]);
+      var month = int.parse(parts[2]);
+      var day = int.parse(parts[3]);
+
+      // Find or create a series for this fighter
+      var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
+      if(series == null) {
+        series = charts.Series<EloData, DateTime>(
+          id: fighterName,
+          domainFn: (EloData data, _) => DateTime(data.timestamp.year, data.timestamp.month, data.timestamp.day),
+          measureFn: (EloData data, _) => data.elo,
+          data: [],
+        );
+        seriesList.add(series);
+      }
+
+      // Add data point
+      series.data.add(EloData(DateTime(year, month, day), elo));
+    });
+
+    return seriesList;
+  }
 
 
 /*
