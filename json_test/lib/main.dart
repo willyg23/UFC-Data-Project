@@ -351,6 +351,7 @@ maybe have anothe box appear for the input to be positive or negative?
       _modifiers.add(sub_win_input);
       _modifiers.add(ko_tko_input);
       String eloHashMapString = "";
+      FighterEntity? currentFighter;
 
       for (FightEntity fight in _fights) {      
         // if(fight.b_fighter_string == null){ 
@@ -360,7 +361,13 @@ maybe have anothe box appear for the input to be positive or negative?
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
-          eloHashMapString = 
+          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          currentFighter = _fighters[fight.r_fighter_string];
+          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
+
+          eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          currentFighter = _fighters[fight.b_fighter_string];
+          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
         }
        // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
@@ -385,6 +392,9 @@ maybe have anothe box appear for the input to be positive or negative?
       print('Fighter: ${mapEntry.key} Elo: ${mapEntry.value.elo!.last}  Win/Loss ratio: W${mapEntry.value.wins} L${mapEntry.value.losses}  Rank: ${q}'); // any . function after shows up as grey in the IDE but still works just fine. worth noting just in case.
     // invoke deez nuts in production code dart
     }
+
+    print("eloHashMap Test");
+    print(eloHashMap["Jon Jones-7-6-2019"]);
     
       /*
         useful statements
