@@ -8,6 +8,7 @@ import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
 import 'package:intl/intl.dart';
+import 'package:charts_flutter/flutter.dart' as charts;
 // import 'dart:async';
 
 
@@ -393,8 +394,11 @@ maybe have anothe box appear for the input to be positive or negative?
     // invoke deez nuts in production code dart
     }
 
+    // should be two different elos
     print("eloHashMap Test");
-    print(eloHashMap["Jon Jones-7-6-2019"]);
+    print(eloHashMap["Jon Jones-12-29-2018"]); //1321
+    print(eloHashMap["Jon Jones-7-6-2019"]); //1343
+    // it works lets goooooooooooooo baby
     
       /*
         useful statements
