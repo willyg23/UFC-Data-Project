@@ -76,12 +76,11 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 */
   final eloCalculatorObject = eloCalculator(); 
   
-  
-
+  Map<String, int> eloHashMap = {};
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
 
-  late Map<String,FighterEntity> _fighters = {}; 
+  late Map<String,FighterEntity> _fighters = {};
 
   late List<FightEntity> _fights = [];
 
@@ -255,11 +254,8 @@ but that doesn't work, because dart doesn't allow the object and the class name 
         }
 
 
-        if(_fighters[_fightEntity.b_fighter_string] == null){
-     
-
-        //_side = "B"
-
+        if(_fighters[_fightEntity.b_fighter_string] == null){  
+      //_side = "B"
          _fighters[_fightEntity.b_fighter_string!] = FighterEntity(
             name: _fightEntity.b_fighter_string,
             weight_classes: [_fightEntity.weight_class!], //  weight_classes is a list containing just "_fightEntity.weight_class". Doesn't account for fighters who fight in multiple weight classes. 
@@ -354,10 +350,9 @@ maybe have anothe box appear for the input to be positive or negative?
       double? ko_tko_input = null;
       _modifiers.add(sub_win_input);
       _modifiers.add(ko_tko_input);
+      String eloHashMapString = "";
 
-
-      for (FightEntity fight in _fights) {
-              
+      for (FightEntity fight in _fights) {      
         // if(fight.b_fighter_string == null){ 
         //   print('b fighter that is null fight id: ${fight.fight_id}');
         // }
@@ -365,6 +360,7 @@ maybe have anothe box appear for the input to be positive or negative?
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
+          eloHashMapString = 
         }
        // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
