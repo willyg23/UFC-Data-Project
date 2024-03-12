@@ -9,6 +9,8 @@ import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart' as charts;
+import 'package:collection/collection.dart'; 
+
 // import 'dart:async';
 
 class EloData {
@@ -100,7 +102,9 @@ class _MyHomePageState extends State<MyHomePage> {
       }
 
       // Add data point
-      series.data.add(EloData(DateTime(year, month, day), elo));
+      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
+      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
+
     });
 
     return seriesList;
@@ -122,6 +126,13 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
   late List<FightEntity> _fights = [];
 
+
+  @override
+    void initState() {
+      super.initState(); // Always call super.initState() first!
+      readJson(); // Call your data processing function
+  }  
+
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
 
@@ -129,6 +140,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
     // The dynamic type in Dart is a special type that tells the Dart analyzer to allow any type of value to be assigned to this variable.
     // So 'List<dynamic>' means that the list data can contain elements of any type.
     final List<dynamic> _data = json.decode(response)['items']; // should you be doing final here?
+    int fighterIdCounter = 0;
 
     setState(() {
       
@@ -283,11 +295,12 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             wins: 0,
             age: _fightEntity.r_age,
             losses: 0,
-            
+            fighterId: fighterIdCounter,
             );
 
 // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
             _fightEntity.r_fighter_entity = _fighters[_fightEntity.r_fighter_string];
+            fighterIdCounter++;
 
         }
 
@@ -351,10 +364,12 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             wins: 0,
             age: _fightEntity.r_age,
             losses: 0,
+            fighterId: fighterIdCounter,
             );
 
             // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
             _fightEntity.b_fighter_entity = _fighters[_fightEntity.b_fighter_string];
+            fighterIdCounter++;
         }
 
       }
@@ -454,31 +469,54 @@ maybe have anothe box appear for the input to be positive or negative?
 
   } // readJson end
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
-     
-      body: ElevatedButton(
-        onPressed: () {
-          readJson();
-        },
-        child: Center(child: Text("Load Json"))),
 
-    );
-  }
+@override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(widget.title),
+    ),
+    body: Column( 
+      children: [
+        Expanded( 
+          child: charts.LineChart(
+            _generateChartData().cast<charts.Series<dynamic, num>>(), 
+            animate: true, 
+            domainAxis: charts.DateTimeAxisSpec(),
+          ),
+        ),
+        // ... (Other widgets you may want below the graph) ...
+      ],
+    ),
+  );
+}
+
+
+  // @override
+  // Widget build(BuildContext context) {
+  //   // This method is rerun every time setState is called, for instance as done
+  //   // by the _incrementCounter method above.
+  //   //
+  //   // The Flutter framework has been optimized to make rerunning build methods
+  //   // fast, so that you can just rebuild anything that needs updating rather
+  //   // than having to individually change instances of widgets.
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       // TRY THIS: Try changing the color here to a specific color (to
+  //       // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+  //       // change color while the other colors stay the same.
+  //       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  //       // Here we take the value from the MyHomePage object that was created by
+  //       // the App.build method, and use it to set our appbar title.
+  //       title: Text(widget.title),
+  //     ),
+     
+  //     body: ElevatedButton(
+  //       onPressed: () {
+  //         readJson();
+  //       },
+  //       child: Center(child: Text("Load Json"))),
+
+  //   );
+  // }
 }

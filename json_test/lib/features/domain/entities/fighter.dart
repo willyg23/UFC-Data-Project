@@ -41,6 +41,8 @@ class FighterEntity extends Equatable {
 
   int ? losses;
 
+  int ? fighterId;
+
   FighterEntity({
     this.name,
     this.weight_classes,
@@ -69,6 +71,7 @@ class FighterEntity extends Equatable {
     this.wins,
     this.age,
     this.losses,
+    this.fighterId,
 
   });
 
@@ -101,6 +104,7 @@ class FighterEntity extends Equatable {
       wins,
       age,
       losses,
+      fighterId,
     ];
   }
 
