@@ -78,37 +78,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
 
 
-  List<charts.Series<EloData, DateTime>> _generateChartData() {
-    List<charts.Series<EloData, DateTime>> seriesList = [];
 
-    eloHashMap.forEach((key, elo) {
-      // Parse key to get fighter name and date
-      var parts = key.split('-'); 
-      var fighterName = parts[0];
-      var year = int.parse(parts[1]);
-      var month = int.parse(parts[2]);
-      var day = int.parse(parts[3]);
-
-      // Find or create a series for this fighter
-      var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
-      if(series == null) {
-        series = charts.Series<EloData, DateTime>(
-          id: fighterName,
-          domainFn: (EloData data, _) => DateTime(data.timestamp.year, data.timestamp.month, data.timestamp.day),
-          measureFn: (EloData data, _) => data.elo,
-          data: [],
-        );
-        seriesList.add(series);
-      }
-
-      // Add data point
-      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
-      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
-
-    });
-
-    return seriesList;
-  }
 
 
 /*
@@ -127,11 +97,53 @@ but that doesn't work, because dart doesn't allow the object and the class name 
   late List<FightEntity> _fights = [];
 
 
-  @override
-    void initState() {
-      super.initState(); // Always call super.initState() first!
-      readJson(); // Call your data processing function
-  }  
+  List<charts.Series<EloData, DateTime>> _generateChartData() {
+
+     List<charts.Series<EloData, DateTime>> seriesList = [];
+
+    //eloHashMap.forEach((key, elo) {
+      // Parse key to get fighter name and date
+      // var parts = key.split('-'); 
+      // var fighterName = parts[0];
+      // var year = int.parse(parts[1]);
+      // var month = int.parse(parts[2]);
+      // var day = int.parse(parts[3]);
+ // Parse key to get fighter name and date
+    eloHashMap.forEach((key, elo) {
+    var parts = key.split('-'); 
+    var fighterName = parts[0];
+    var month = int.parse(parts[1].padLeft(2, '0')); // Padding for months
+    var day = int.parse(parts[2].padLeft(2, '0')); // Padding for days
+    var year = int.parse(parts[3]);
+    var fighterId = parts[4]; 
+
+      // Find or create a series for this fighter
+      var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
+      if(series == null) {
+        series = charts.Series<EloData, DateTime>(
+          id: fighterName,
+          domainFn: (EloData data, _) => DateTime(data.timestamp.year, data.timestamp.month, data.timestamp.day),
+          measureFn: (EloData data, _) => data.elo,
+          data: [],
+        );
+        seriesList.add(series);
+      }
+
+      // Add data point
+      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
+      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
+
+      // if(seriesList == null){
+      //   throw FormatException();
+      // }
+
+      //this doesn't have an error leat
+      //throw seriesList;
+    });
+
+    return seriesList;
+
+  }
 
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
@@ -414,11 +426,11 @@ maybe have anothe box appear for the input to be positive or negative?
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
-          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}-${fight.r_fighter_entity!.fighterId}";
           currentFighter = _fighters[fight.r_fighter_string];
           eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
 
-          eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}-${fight.b_fighter_entity!.fighterId}";
           currentFighter = _fighters[fight.b_fighter_string];
           eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
         }
@@ -469,6 +481,28 @@ maybe have anothe box appear for the input to be positive or negative?
 
   } // readJson end
 
+  
+
+  // @override
+  //   void initState() {
+  //     super.initState(); // Always call super.initState() first!
+  //     readJson(); // Call your data processing function
+  // }  
+
+  bool _isLoading = true; 
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData(); 
+  }
+
+  void _initializeData() async {
+    await readJson(); 
+    setState(() {
+      _isLoading = false; 
+    });
+  }
 
 @override
 Widget build(BuildContext context) {
