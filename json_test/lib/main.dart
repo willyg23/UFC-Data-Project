@@ -1,4 +1,4 @@
-import 'dart:math';
+  import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -504,26 +504,50 @@ maybe have anothe box appear for the input to be positive or negative?
     });
   }
 
-@override
+  @override
 Widget build(BuildContext context) {
   return Scaffold(
     appBar: AppBar(
       title: Text(widget.title),
     ),
-    body: Column( 
-      children: [
-        Expanded( 
-          child: charts.LineChart(
-            _generateChartData().cast<charts.Series<dynamic, num>>(), 
-            animate: true, 
-            domainAxis: charts.DateTimeAxisSpec(),
-          ),
-        ),
-        // ... (Other widgets you may want below the graph) ...
-      ],
-    ),
+    body: _isLoading 
+        ? Center(child: CircularProgressIndicator())  // Loading state
+        : Column( 
+            children: [
+              Expanded( 
+                 child: charts.LineChart(
+                   _generateChartData().cast<charts.Series<dynamic, num>>(),
+                   animate: true,
+                   domainAxis: charts.DateTimeAxisSpec(),
+                 ),
+              ),
+              // ... Other widgets below the graph ...
+            ],
+          ), 
   );
 }
+
+
+// @override
+// Widget build(BuildContext context) {
+//   return Scaffold(
+//     appBar: AppBar(
+//       title: Text(widget.title),
+//     ),
+//     body: Column( 
+//       children: [
+//         Expanded( 
+//           child: charts.LineChart(
+//             _generateChartData().cast<charts.Series<dynamic, num>>(), 
+//             animate: true, 
+//             domainAxis: charts.DateTimeAxisSpec(),
+//           ),
+//         ),
+//         // ... (Other widgets you may want below the graph) ...
+//       ],
+//     ),
+//   );
+// }
 
 
   // @override
