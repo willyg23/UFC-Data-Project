@@ -16,7 +16,7 @@ import 'package:collection/collection.dart';
 class EloData {
   final DateTime timestamp;
   final int elo;
-  final String fighterId; 
+  final int fighterId; 
 
   EloData(this.timestamp, this.elo, this.fighterId);
 }
@@ -76,74 +76,18 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
-
-
-
 /*
 note:
 before I had it as: final eloCalculator = eloCalculator();
 but that doesn't work, because dart doesn't allow the object and the class name to be the same
 */
   final eloCalculatorObject = eloCalculator(); 
-  
   Map<String, int> eloHashMap = {};
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
-
   late Map<String,FighterEntity> _fighters = {};
 
   late List<FightEntity> _fights = [];
-
-
-  List<charts.Series<EloData, DateTime>> _generateChartData() {
-
-     List<charts.Series<EloData, DateTime>> seriesList = [];
-
-    //eloHashMap.forEach((key, elo) {
-      // Parse key to get fighter name and date
-      // var parts = key.split('-'); 
-      // var fighterName = parts[0];
-      // var year = int.parse(parts[1]);
-      // var month = int.parse(parts[2]);
-      // var day = int.parse(parts[3]);
- // Parse key to get fighter name and date
-    eloHashMap.forEach((key, elo) {
-    var parts = key.split('-'); 
-    var fighterName = parts[0];
-    var month = int.parse(parts[1].padLeft(2, '0')); // Padding for months
-    var day = int.parse(parts[2].padLeft(2, '0')); // Padding for days
-    var year = int.parse(parts[3]);
-    var fighterId = parts[4]; 
-
-      // Find or create a series for this fighter
-      var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
-      if(series == null) {
-        series = charts.Series<EloData, DateTime>(
-          id: fighterName,
-          domainFn: (EloData data, _) => DateTime(data.timestamp.year, data.timestamp.month, data.timestamp.day),
-          measureFn: (EloData data, _) => data.elo,
-          data: [],
-        );
-        seriesList.add(series);
-      }
-
-      // Add data point
-      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
-      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
-
-      // if(seriesList == null){
-      //   throw FormatException();
-      // }
-
-      //this doesn't have an error leat
-      //throw seriesList;
-    });
-
-    return seriesList;
-
-  }
 
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
@@ -503,52 +447,6 @@ maybe have anothe box appear for the input to be positive or negative?
       _isLoading = false; 
     });
   }
-
-//   @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: Text(widget.title),
-//     ),
-//     body: _isLoading 
-//         ? Center(child: CircularProgressIndicator())  // Loading state
-//         : Column( 
-//             children: [
-//               Expanded( 
-//                  child: charts.LineChart(
-//                    _generateChartData().cast<charts.Series<dynamic, num>>(),
-//                    animate: true,
-//                    domainAxis: charts.DateTimeAxisSpec(),
-//                  ),
-//               ),
-//               // ... Other widgets below the graph ...
-//             ],
-//           ), 
-//   );
-// }
-
-
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: Text(widget.title),
-//     ),
-//     body: Column( 
-//       children: [
-//         Expanded( 
-//           child: charts.LineChart(
-//             _generateChartData().cast<charts.Series<dynamic, num>>(), 
-//             animate: true, 
-//             domainAxis: charts.DateTimeAxisSpec(),
-//           ),
-//         ),
-//         // ... (Other widgets you may want below the graph) ...
-//       ],
-//     ),
-//   );
-// }
-
 
   @override
   Widget build(BuildContext context) {
