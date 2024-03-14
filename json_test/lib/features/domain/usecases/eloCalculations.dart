@@ -43,7 +43,7 @@ class eloCalculator{
     */
 
    
-
+ // Map<String, int> eloHashMap = {};
 
 /*
 pretty sure this currently doesn't work properly. becuase we don't check to see what manner the fight was won in.
@@ -126,6 +126,8 @@ so you could get a knockout win, but if subModifier was set to 5.0, the winner w
     */ 
     winnerEntity.elo!.add(winnerNewRating);
     loserEntity.elo!.add(loserNewRating);
+
+    
 
     }
 
