@@ -19,6 +19,7 @@ class EloData {
   final String fighterId; 
 
   EloData(this.timestamp, this.elo, this.fighterId);
+  //  EloData(this.timestamp, this.elo);
 }
 
 void main() {
@@ -76,11 +77,6 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
-
-
-
-
-
 /*
 note:
 before I had it as: final eloCalculator = eloCalculator();
@@ -97,10 +93,10 @@ but that doesn't work, because dart doesn't allow the object and the class name 
   late List<FightEntity> _fights = [];
 
 
+
+//try top redo this section tmrw?
   List<charts.Series<EloData, DateTime>> _generateChartData() {
-
      List<charts.Series<EloData, DateTime>> seriesList = [];
-
     //eloHashMap.forEach((key, elo) {
       // Parse key to get fighter name and date
       // var parts = key.split('-'); 
@@ -118,7 +114,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
     var fighterId = parts[4]; 
 
       // Find or create a series for this fighter
-      var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
+    var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
       if(series == null) {
         series = charts.Series<EloData, DateTime>(
           id: fighterName,
@@ -133,6 +129,9 @@ but that doesn't work, because dart doesn't allow the object and the class name 
       series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
       series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
 
+      // series.data.add(EloData(DateTime(year, month, day), elo)); 
+      // series.data.add(EloData(DateTime(year, month, day), elo)); 
+
       // if(seriesList == null){
       //   throw FormatException();
       // }
@@ -140,9 +139,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
       //this doesn't have an error leat
       //throw seriesList;
     });
-
     return seriesList;
-
   }
 
   Future<void> readJson() async {
@@ -175,7 +172,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
         _fightEntity.winner = _data[i]['Winner'];
        
-
        // explanation for what's going on in code blocks like this can be found a little bit lower
         dynamic rOddsValue = _data[i]['R_odds'];
         _fightEntity.r_odds = rOddsValue != null && rOddsValue != ""
@@ -184,7 +180,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
                 : int.tryParse(rOddsValue.toString()) ?? -69420
             : -69420;
                 
-        
         dynamic bOddsValue = _data[i]['B_odds'];
         _fightEntity.b_odds = bOddsValue != null && bOddsValue != ""
             ? bOddsValue is int
@@ -214,7 +209,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
 
         /*
-
           Explaining the absolute tomfoolery that is occuring with statements like these
 
           avg_SIG_STR_pct: _data[i]["B_avg_SIG_STR_pct"] != null && _data[i]["B_avg_SIG_STR_pct"] != ""
@@ -309,11 +303,9 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             losses: 0,
             fighterId: fighterIdCounter,
             );
-
 // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
             _fightEntity.r_fighter_entity = _fighters[_fightEntity.r_fighter_string];
             fighterIdCounter++;
-
         }
 
 
@@ -504,28 +496,28 @@ maybe have anothe box appear for the input to be positive or negative?
     });
   }
 
-//   @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: Text(widget.title),
-//     ),
-//     body: _isLoading 
-//         ? Center(child: CircularProgressIndicator())  // Loading state
-//         : Column( 
-//             children: [
-//               Expanded( 
-//                  child: charts.LineChart(
-//                    _generateChartData().cast<charts.Series<dynamic, num>>(),
-//                    animate: true,
-//                    domainAxis: charts.DateTimeAxisSpec(),
-//                  ),
-//               ),
-//               // ... Other widgets below the graph ...
-//             ],
-//           ), 
-//   );
-// }
+  @override
+Widget build(BuildContext context) {
+  return Scaffold(
+    appBar: AppBar(
+      title: Text(widget.title),
+    ),
+    body: _isLoading 
+        ? Center(child: CircularProgressIndicator())  // Loading state
+        : Column( 
+            children: [
+              Expanded( 
+                 child: charts.LineChart(
+                   _generateChartData().cast<charts.Series<dynamic, num>>(),
+                   animate: true,
+                   domainAxis: charts.DateTimeAxisSpec(),
+                 ),
+              ),
+              // ... Other widgets below the graph ...
+            ],
+          ), 
+  );
+}
 
 
 // @override
@@ -550,31 +542,31 @@ maybe have anothe box appear for the input to be positive or negative?
 // }
 
 
-  @override
-  Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
-    return Scaffold(
-      appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
-      ),
+  // @override
+  // Widget build(BuildContext context) {
+  //   // This method is rerun every time setState is called, for instance as done
+  //   // by the _incrementCounter method above.
+  //   //
+  //   // The Flutter framework has been optimized to make rerunning build methods
+  //   // fast, so that you can just rebuild anything that needs updating rather
+  //   // than having to individually change instances of widgets.
+  //   return Scaffold(
+  //     appBar: AppBar(
+  //       // TRY THIS: Try changing the color here to a specific color (to
+  //       // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+  //       // change color while the other colors stay the same.
+  //       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+  //       // Here we take the value from the MyHomePage object that was created by
+  //       // the App.build method, and use it to set our appbar title.
+  //       title: Text(widget.title),
+  //     ),
      
-      body: ElevatedButton(
-        onPressed: () {
+  //     body: ElevatedButton(
+  //       onPressed: () {
           
-        },
-        child: Center(child: Text("yay!"))),
+  //       },
+  //       child: Center(child: Text("yay!"))),
 
-    );
-  }
+  //   );
+  // }
 }
