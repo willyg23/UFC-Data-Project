@@ -13,14 +13,7 @@ import 'package:collection/collection.dart';
 
 // import 'dart:async';
 
-class EloData {
-  final DateTime timestamp;
-  final int elo;
-  final String fighterId; 
 
-  EloData(this.timestamp, this.elo, this.fighterId);
-  //  EloData(this.timestamp, this.elo);
-}
 
 void main() {
   runApp(const MyApp());
@@ -93,54 +86,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
   late List<FightEntity> _fights = [];
 
 
-
-//try top redo this section tmrw?
-  List<charts.Series<EloData, DateTime>> _generateChartData() {
-     List<charts.Series<EloData, DateTime>> seriesList = [];
-    //eloHashMap.forEach((key, elo) {
-      // Parse key to get fighter name and date
-      // var parts = key.split('-'); 
-      // var fighterName = parts[0];
-      // var year = int.parse(parts[1]);
-      // var month = int.parse(parts[2]);
-      // var day = int.parse(parts[3]);
- // Parse key to get fighter name and date
-    eloHashMap.forEach((key, elo) {
-    var parts = key.split('-'); 
-    var fighterName = parts[0];
-    var month = int.parse(parts[1].padLeft(2, '0')); // Padding for months
-    var day = int.parse(parts[2].padLeft(2, '0')); // Padding for days
-    var year = int.parse(parts[3]);
-    var fighterId = parts[4]; 
-
-      // Find or create a series for this fighter
-    var series = seriesList.firstWhereOrNull((s) => s.id == fighterName);
-      if(series == null) {
-        series = charts.Series<EloData, DateTime>(
-          id: fighterName,
-          domainFn: (EloData data, _) => DateTime(data.timestamp.year, data.timestamp.month, data.timestamp.day),
-          measureFn: (EloData data, _) => data.elo,
-          data: [],
-        );
-        seriesList.add(series);
-      }
-
-      // Add data point
-      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
-      series.data.add(EloData(DateTime(year, month, day), elo, fighterId)); 
-
-      // series.data.add(EloData(DateTime(year, month, day), elo)); 
-      // series.data.add(EloData(DateTime(year, month, day), elo)); 
-
-      // if(seriesList == null){
-      //   throw FormatException();
-      // }
-
-      //this doesn't have an error leat
-      //throw seriesList;
-    });
-    return seriesList;
-  }
 
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
@@ -497,77 +442,35 @@ maybe have anothe box appear for the input to be positive or negative?
     });
   }
 
+
+
+
+
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    appBar: AppBar(
-      title: Text(widget.title),
-    ),
-    body: _isLoading 
-        ? Center(child: CircularProgressIndicator())  // Loading state
-        : Column( 
-            children: [
-              Expanded( 
-                 child: charts.LineChart(
-                   _generateChartData().cast<charts.Series<dynamic, num>>(),
-                   animate: true,
-                   domainAxis: charts.DateTimeAxisSpec(),
-                 ),
-              ),
-              // ... Other widgets below the graph ...
-            ],
-          ), 
-  );
-}
-
-
-// @override
-// Widget build(BuildContext context) {
-//   return Scaffold(
-//     appBar: AppBar(
-//       title: Text(widget.title),
-//     ),
-//     body: Column( 
-//       children: [
-//         Expanded( 
-//           child: charts.LineChart(
-//             _generateChartData().cast<charts.Series<dynamic, num>>(), 
-//             animate: true, 
-//             domainAxis: charts.DateTimeAxisSpec(),
-//           ),
-//         ),
-//         // ... (Other widgets you may want below the graph) ...
-//       ],
-//     ),
-//   );
-// }
-
-
-  // @override
-  // Widget build(BuildContext context) {
-  //   // This method is rerun every time setState is called, for instance as done
-  //   // by the _incrementCounter method above.
-  //   //
-  //   // The Flutter framework has been optimized to make rerunning build methods
-  //   // fast, so that you can just rebuild anything that needs updating rather
-  //   // than having to individually change instances of widgets.
-  //   return Scaffold(
-  //     appBar: AppBar(
-  //       // TRY THIS: Try changing the color here to a specific color (to
-  //       // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-  //       // change color while the other colors stay the same.
-  //       backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-  //       // Here we take the value from the MyHomePage object that was created by
-  //       // the App.build method, and use it to set our appbar title.
-  //       title: Text(widget.title),
-  //     ),
+  Widget build(BuildContext context) {
+    // This method is rerun every time setState is called, for instance as done
+    // by the _incrementCounter method above.
+    //
+    // The Flutter framework has been optimized to make rerunning build methods
+    // fast, so that you can just rebuild anything that needs updating rather
+    // than having to individually change instances of widgets.
+    return Scaffold(
+      appBar: AppBar(
+        // TRY THIS: Try changing the color here to a specific color (to
+        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
+        // change color while the other colors stay the same.
+        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+        // Here we take the value from the MyHomePage object that was created by
+        // the App.build method, and use it to set our appbar title.
+        title: Text(widget.title),
+      ),
      
-  //     body: ElevatedButton(
-  //       onPressed: () {
+      body: ElevatedButton(
+        onPressed: () {
           
-  //       },
-  //       child: Center(child: Text("yay!"))),
+        },
+        child: Center(child: Text("yay!"))),
 
-  //   );
-  // }
+    );
+  }
 }
