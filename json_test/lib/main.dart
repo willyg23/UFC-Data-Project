@@ -1,4 +1,4 @@
-  import 'dart:math';
+import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +8,6 @@ import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
 import 'package:intl/intl.dart';
-import 'package:charts_flutter/flutter.dart' as charts;
-import 'package:collection/collection.dart'; 
-
 // import 'dart:async';
 
 
@@ -70,6 +67,8 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+
+
 /*
 note:
 before I had it as: final eloCalculator = eloCalculator();
@@ -85,8 +84,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
   late List<FightEntity> _fights = [];
 
-
-
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
 
@@ -94,7 +91,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
     // The dynamic type in Dart is a special type that tells the Dart analyzer to allow any type of value to be assigned to this variable.
     // So 'List<dynamic>' means that the list data can contain elements of any type.
     final List<dynamic> _data = json.decode(response)['items']; // should you be doing final here?
-    int fighterIdCounter = 0;
 
     setState(() {
       
@@ -117,6 +113,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
         _fightEntity.winner = _data[i]['Winner'];
        
+
        // explanation for what's going on in code blocks like this can be found a little bit lower
         dynamic rOddsValue = _data[i]['R_odds'];
         _fightEntity.r_odds = rOddsValue != null && rOddsValue != ""
@@ -125,6 +122,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
                 : int.tryParse(rOddsValue.toString()) ?? -69420
             : -69420;
                 
+        
         dynamic bOddsValue = _data[i]['B_odds'];
         _fightEntity.b_odds = bOddsValue != null && bOddsValue != ""
             ? bOddsValue is int
@@ -154,6 +152,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
 
         /*
+
           Explaining the absolute tomfoolery that is occuring with statements like these
 
           avg_SIG_STR_pct: _data[i]["B_avg_SIG_STR_pct"] != null && _data[i]["B_avg_SIG_STR_pct"] != ""
@@ -246,11 +245,12 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             wins: 0,
             age: _fightEntity.r_age,
             losses: 0,
-            fighterId: fighterIdCounter,
+            
             );
+
 // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
             _fightEntity.r_fighter_entity = _fighters[_fightEntity.r_fighter_string];
-            fighterIdCounter++;
+
         }
 
 
@@ -313,12 +313,10 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             wins: 0,
             age: _fightEntity.r_age,
             losses: 0,
-            fighterId: fighterIdCounter,
             );
 
             // make sure to add the fighterEntity to the fightEntity after creating the fighterEntity has been created! I was forgetting to do this for a while lol
             _fightEntity.b_fighter_entity = _fighters[_fightEntity.b_fighter_string];
-            fighterIdCounter++;
         }
 
       }
@@ -363,11 +361,11 @@ maybe have anothe box appear for the input to be positive or negative?
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
-          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}-${fight.r_fighter_entity!.fighterId}";
+          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           currentFighter = _fighters[fight.r_fighter_string];
           eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
 
-          eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}-${fight.b_fighter_entity!.fighterId}";
+          eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           currentFighter = _fighters[fight.b_fighter_string];
           eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
         }
@@ -395,12 +393,9 @@ maybe have anothe box appear for the input to be positive or negative?
     // invoke deez nuts in production code dart
     }
 
-
-    // should be two different elos
     print("eloHashMap Test");
-    print(eloHashMap["Jon Jones-12-29-2018"]); //1321
-    print(eloHashMap["Jon Jones-7-6-2019"]); //1343
-    // it works lets goooooooooooooo baby
+    print(eloHashMap["Jon Jones-4-23-2016"]); //1313
+    print(eloHashMap["Jon Jones-7-6-2019"]); // 1343
     
       /*
         useful statements
@@ -419,15 +414,8 @@ maybe have anothe box appear for the input to be positive or negative?
 
   } // readJson end
 
-  
 
-  // @override
-  //   void initState() {
-  //     super.initState(); // Always call super.initState() first!
-  //     readJson(); // Call your data processing function
-  // }  
-
-  bool _isLoading = true; 
+ bool _isLoading = true; 
 
   @override
   void initState() {
@@ -441,9 +429,6 @@ maybe have anothe box appear for the input to be positive or negative?
       _isLoading = false; 
     });
   }
-
-
-
 
 
   @override
@@ -465,11 +450,11 @@ maybe have anothe box appear for the input to be positive or negative?
         title: Text(widget.title),
       ),
      
-      body: ElevatedButton(
-        onPressed: () {
-          
-        },
-        child: Center(child: Text("yay!"))),
+      // body: ElevatedButton(
+      //   onPressed: () {
+      //     readJson();
+      //   },
+      //   child: Center(child: Text("Load Json"))),
 
     );
   }
