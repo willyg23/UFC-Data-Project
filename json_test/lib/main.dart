@@ -394,7 +394,8 @@ maybe have anothe box appear for the input to be positive or negative?
     }
 
     print("eloHashMap Test");
-    print(eloHashMap["Jon Jones-7-6-2019"]);
+    print(eloHashMap["Jon Jones-4-23-2016"]); //1313
+    print(eloHashMap["Jon Jones-7-6-2019"]); // 1343
     
       /*
         useful statements
@@ -412,6 +413,23 @@ maybe have anothe box appear for the input to be positive or negative?
     }); //set state end
 
   } // readJson end
+
+
+ bool _isLoading = true; 
+
+  @override
+  void initState() {
+    super.initState();
+    _initializeData(); 
+  }
+
+  void _initializeData() async {
+    await readJson(); 
+    setState(() {
+      _isLoading = false; 
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -432,11 +450,11 @@ maybe have anothe box appear for the input to be positive or negative?
         title: Text(widget.title),
       ),
      
-      body: ElevatedButton(
-        onPressed: () {
-          readJson();
-        },
-        child: Center(child: Text("Load Json"))),
+      // body: ElevatedButton(
+      //   onPressed: () {
+      //     readJson();
+      //   },
+      //   child: Center(child: Text("Load Json"))),
 
     );
   }
