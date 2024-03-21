@@ -360,14 +360,27 @@ maybe have anothe box appear for the input to be positive or negative?
 
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
+          //performm elo calculations
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
-          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
-          currentFighter = _fighters[fight.r_fighter_string];
-          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
 
+          //create the string that will be the key for this entry in eloHashMap
+          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          //set currentFighter to the red corner fighter
+          currentFighter = _fighters[fight.r_fighter_string];
+          /*
+          create a new entry in eloHashMap. the key is FirstName LastName-month-day-year. the value is the last value in currentFighter's elo[] array. 
+          Which would be their elo rating after the fight they have just had their new elo calculated on, which occured in a few lines above with eloCalculatorObject.setNewRating
+          examples:
+          print(eloHashMap["Jon Jones-4-23-2016"]); // prints 1313
+          print(eloHashMap["Jon Jones-7-6-2019"]); // prints 1343
+          */
+          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; 
+
+
+          //same thing but for blue corner. make sure you didn't forget to change any of the r to b
           eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           currentFighter = _fighters[fight.b_fighter_string];
-          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; //creates an entry in the hashmap
+          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; 
         }
        // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
