@@ -76,6 +76,8 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 */
   final eloCalculatorObject = eloCalculator(); 
   
+  // Key = FighterFirstName FighterLastName-month-day-year
+  // value = a fighter's ELO after they fought on a certain night.
   Map<String, int> eloHashMap = {};
   // 'late' allows you to declare a vairable without immediately assinging it a value.
   // make sure not to attempt accessing the late variable before it's initialized, that'll throw a runtime error
@@ -360,6 +362,10 @@ maybe have anothe box appear for the input to be positive or negative?
 
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
+
+          
+
+
           //performm elo calculations
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
 
@@ -374,13 +380,15 @@ maybe have anothe box appear for the input to be positive or negative?
           print(eloHashMap["Jon Jones-4-23-2016"]); // prints 1313
           print(eloHashMap["Jon Jones-7-6-2019"]); // prints 1343
           */
-          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; 
+          //eloHashMap[eloHashMapString] = currentFighter!.elo!.last; 
+          currentFighter!.fighterEloHashMap[eloHashMapString] = currentFighter.elo!.last;
 
 
           //same thing but for blue corner. make sure you didn't forget to change any of the r to b
           eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           currentFighter = _fighters[fight.b_fighter_string];
-          eloHashMap[eloHashMapString] = currentFighter!.elo!.last; 
+          // eloHashMap[eloHashMapString] = currentFighter!.elo!.last;
+          currentFighter!.fighterEloHashMap[eloHashMapString] = currentFighter.elo!.last;
         }
        // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
@@ -407,8 +415,10 @@ maybe have anothe box appear for the input to be positive or negative?
     }
 
     print("eloHashMap Test");
-    print(eloHashMap["Jon Jones-4-23-2016"]); //1313
-    print(eloHashMap["Jon Jones-7-6-2019"]); // 1343
+    // print(eloHashMap["Jon Jones-4-23-2016"]); //1313
+    // print(eloHashMap["Jon Jones-7-6-2019"]); // 1343
+    print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-4-23-2016"]); // should be 1313, and it is!
+    print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-7-6-2019"]); // should be 1343, and it is!
     
       /*
         useful statements
