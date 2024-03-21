@@ -352,7 +352,8 @@ maybe have anothe box appear for the input to be positive or negative?
       double? ko_tko_input = null;
       _modifiers.add(sub_win_input);
       _modifiers.add(ko_tko_input);
-      String eloHashMapString = "";
+      String eloHashMapString_R = "";
+      String eloHashMapString_B = "";
       FighterEntity? currentFighter;
 
       for (FightEntity fight in _fights) {      
@@ -363,14 +364,13 @@ maybe have anothe box appear for the input to be positive or negative?
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
 
-          
-
-
+          eloHashMapString_R = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          eloHashMapString_B = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           //performm elo calculations
-          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers);
+          eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers, eloHashMapString_R, eloHashMapString_B);
 
           //create the string that will be the key for this entry in eloHashMap
-          eloHashMapString = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          
           //set currentFighter to the red corner fighter
           currentFighter = _fighters[fight.r_fighter_string];
           /*
