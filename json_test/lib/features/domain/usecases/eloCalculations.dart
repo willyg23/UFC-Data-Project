@@ -83,7 +83,7 @@ so you could get a knockout win, but if subModifier was set to 5.0, the winner w
     return 1.0 / (1.0 + pow(10.0, ((opponentRating - fighterElo).toDouble() / 400.0)));
   }
 
-  void setNewRating(String winner, String r_fighter, String b_fighter, Map<String,FighterEntity> fighterHashMap, List<double?> modifierList) {
+  void setNewRating(String winner, String r_fighter, String b_fighter, Map<String,FighterEntity> fighterHashMap, List<double?> modifierList, String dateOfFight) {
         
     double kFactor = 20.0;
     double expectedScore = 0.0;
@@ -95,6 +95,11 @@ so you could get a knockout win, but if subModifier was set to 5.0, the winner w
     String winnerStr = winner == "Red" ? r_fighter : b_fighter;
     //if winner == "Red" set loserStr to the value of b_fighter. else, set winnStr to the value of r_fighter.
     String loserStr = winner == "Red" ? b_fighter : r_fighter;
+
+    String winnerEloHashMapString = winner == "Red" ? "${r_fighter}-${dateOfFight}" : "${b_fighter}-${dateOfFight}";
+    String loserEloHashMapString = winner == "Red" ? "${r_fighter}-${dateOfFight}" : "${b_fighter}-${dateOfFight}";
+
+
     FighterEntity winnerEntity = fighterHashMap[winnerStr]!;
     FighterEntity loserEntity = fighterHashMap[loserStr]!;
 
@@ -127,7 +132,8 @@ so you could get a knockout win, but if subModifier was set to 5.0, the winner w
     winnerEntity.elo!.add(winnerNewRating);
     loserEntity.elo!.add(loserNewRating);
 
-    
+    winnerEntity.fighterEloHashMap[winnerEloHashMapString] = winnerNewRating;
+    loserEntity.fighterEloHashMap[loserEloHashMapString] = loserNewRating;
 
     }
 
