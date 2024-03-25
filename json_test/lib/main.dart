@@ -401,13 +401,13 @@ maybe have anothe box appear for the input to be positive or negative?
 
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
+          //create the string that will be added onto the key for this entry in eloHashMap
           dateOfFight = "${fight.month}-${fight.day}-${fight.year}";
-          // eloHashMapString_R = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
-          // eloHashMapString_B = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
+          
           //performm elo calculations
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers, dateOfFight);
 
-          //create the string that will be the key for this entry in eloHashMap
+     
           
           //set currentFighter to the red corner fighter
           // currentFighter = _fighters[fight.r_fighter_string];
