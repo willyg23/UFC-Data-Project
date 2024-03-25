@@ -9,79 +9,111 @@ import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
 import 'package:intl/intl.dart';
 import 'package:charts_flutter/flutter.dart';
+import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:charts_flutter/flutter.dart' as charts; 
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
+import 'package:json_test/features/domain/usecases/elo_chart_utils.dart';
+import 'package:json_test/features/domain/usecases/elo_data.dart';
+
 // import 'dart:async';
 
 
 
 void main() {
-  runApp(const MyApp());
+  // runApp(const MyApp());
+  runApp(
+    ChangeNotifierProvider(
+      create: (context) => ChartDataProvider(),
+      child: MyApp(),
+    ),
+  );
 }
 
-class EloChart extends StatelessWidget {
-  final List<Map<String, dynamic>> chartData;
+class ChartDataProvider extends ChangeNotifier {
+  Map<String, FighterEntity> _fighters = {};
 
-  EloChart(this.chartData);
+  Map<String, FighterEntity> get fighters => _fighters;
 
-  @override
-  Widget build(BuildContext context) {
-    return SfCartesianChart( // Assuming you're using Syncfusion charts
-      primaryXAxis: DateTimeAxis(), 
-      series: _generateSeries(chartData)
-    );
+  // Logic to load or update your _fighters data 
+
+  void updateFighters(Map<String, FighterEntity> newFighters) {
+    _fighters = newFighters;
+    notifyListeners(); // Notify listeners to rebuild the chart
   }
+}
 
-  List<LineSeries> _generateSeries(List<Map<String, dynamic>> data) {
-    List<LineSeries> seriesList= [];
+class MyApp extends StatefulWidget {
+    const MyApp({super.key});
+    @override
+    State<MyApp> createState() => _MyAppState();
+}
 
-    for (var fighterData in data) {
-      seriesList.add(
-        LineSeries(
-          dataSource: fighterData['data'],
-          xValueMapper: (dataPoint, _) => DateTime.parse(dataPoint['date']),
-          yValueMapper: (dataPoint, _) => dataPoint['elo'],
-          name: fighterData['fighter'], 
-          // Customize markers, colors, etc. as desired
-        )
+class _MyAppState extends State<MyApp> {
+  // ... // (code from your next step goes here) ...
+   
+    List<charts.Series<EloData, DateTime>> _eloData = []; 
+
+    @override
+    void initState() {
+      super.initState();
+      _generateChartData();
+    }
+
+    void _generateChartData() {
+      // ... your logic to fetch _fighters data and call createChartData ... 
+    }
+
+    @override
+    Widget build(BuildContext context) {
+      return MaterialApp(
+        title: 'Flutter Demo',
+        home: Scaffold(
+          appBar: AppBar(title: Text('Fighter ELO Chart')),
+          body: Center(
+            child: charts.LineChart(
+              _eloData,
+              animate: true,
+            ),
+          ),
+        ),
       );
     }
 
-    return seriesList;
-  }
+
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+// class MyApp extends StatelessWidget {
+//   const MyApp({super.key});
 
-  // This widget is the root of your application.
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        // This is the theme of your application.
-        //
-        // TRY THIS: Try running your application with "flutter run". You'll see
-        // the application has a purple toolbar. Then, without quitting the app,
-        // try changing the seedColor in the colorScheme below to Colors.green
-        // and then invoke "hot reload" (save your changes or press the "hot
-        // reload" button in a Flutter-supported IDE, or press "r" if you used
-        // the command line to start the app).
-        //
-        // Notice that the counter didn't reset back to zero; the application
-        // state is not lost during the reload. To reset the state, use hot
-        // restart instead.
-        //
-        // This works for code too, not just values: Most code changes can be
-        // tested with just a hot reload.
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
+//   // This widget is the root of your application.
+//   @override
+//   Widget build(BuildContext context) {
+//     return MaterialApp(
+//       title: 'Flutter Demo',
+//       theme: ThemeData(
+//         // This is the theme of your application.
+//         //
+//         // TRY THIS: Try running your application with "flutter run". You'll see
+//         // the application has a purple toolbar. Then, without quitting the app,
+//         // try changing the seedColor in the colorScheme below to Colors.green
+//         // and then invoke "hot reload" (save your changes or press the "hot
+//         // reload" button in a Flutter-supported IDE, or press "r" if you used
+//         // the command line to start the app).
+//         //
+//         // Notice that the counter didn't reset back to zero; the application
+//         // state is not lost during the reload. To reset the state, use hot
+//         // restart instead.
+//         //
+//         // This works for code too, not just values: Most code changes can be
+//         // tested with just a hot reload.
+//         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+//         useMaterial3: true,
+//       ),
+//       home: const MyHomePage(title: 'Flutter Demo Home Page'),
+//     );
+//   }
+// }
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({super.key, required this.title});
@@ -376,6 +408,38 @@ maybe have anothe box appear for the input to be positive or negative?
 
       //modifiers testing variables
       
+
+//manual addition for gemini
+      // _fighters["TestFighter"] = FighterEntity(
+      //       name: "Firstname lastname",
+      //       weight_classes: ["lightweight"], //  weight_classes is a list containing just "_fightEntity.weight_class". Doesn't account for fighters who fight in multiple weight classes. 
+      //       //weight_class_rank: [int.parse(_data[i]["R_match_weightclass_rank"])],  commented out until bug is fixed
+      //       gender: "Male",
+      //       current_win_streak: 1,
+      //       current_loss_streak: 0,
+      //       avg_SIG_STR_landed: 4.5,
+      //       avg_SIG_STR_pct: 2.3,
+      //       avg_SUB_ATT: 3.2,
+      //       avg_TD_landed: 5.1,
+      //       avg_TD_pct:7.8,
+      //       total_rounds_fought:25,
+      //       total_title_bouts: 1,
+      //       wins_by_Decision_Majority: 2,
+      //       wins_by_Decision_Split: 5,
+      //       wins_by_Decision_Unanimous: 8,
+      //       wins_by_Submission: 11,
+      //       wins_by_TKO_Doctor_Stoppage: 14,
+      //       height_cms: 190.1,
+      //       reach_cms: 180.1,
+      //       elo: [1200], // 1200 as a placeholder for now. Not sure how what to put here right now.
+      //       //fight_history: , // I believe that if they aren't yet in the list, then this is their first ufc fight. This line returns a list of fightEntities, with the current fight entity (their firt UFC figh) being the 0th and only fight in the list.
+      //       stance: "Southpaw",
+      //       // we set both wins and losses to 0 because we're going to increment them in the elo calculator. We do 0 instead of null, since you can't increment null.
+      //       wins: 0,
+      //       age: 31,
+      //       losses: 0,
+      //       );
+
 /*
       I think that using doubles is doing something crazy with the math. If I put in 50.0 for either modifier, that should be a 50% increase in elo gain, per win via 
       the modifer that was chosen. Yet people's rankings end up in the billions. 
@@ -389,9 +453,6 @@ maybe have anothe box appear for the input to be positive or negative?
       double? ko_tko_input = null;
       _modifiers.add(sub_win_input);
       _modifiers.add(ko_tko_input);
-      String eloHashMapString_R = "";
-      String eloHashMapString_B = "";
-      FighterEntity? currentFighter;
       String dateOfFight;
 
       for (FightEntity fight in _fights) {      
@@ -409,8 +470,6 @@ maybe have anothe box appear for the input to be positive or negative?
 
           //create the string that will be the key for this entry in eloHashMap
           
-          //set currentFighter to the red corner fighter
-          // currentFighter = _fighters[fight.r_fighter_string];
           /*
           create a new entry in eloHashMap. the key is FirstName LastName-month-day-year. the value is the last value in currentFighter's elo[] array. 
           Which would be their elo rating after the fight they have just had their new elo calculated on, which occured in a few lines above with eloCalculatorObject.setNewRating
@@ -418,15 +477,7 @@ maybe have anothe box appear for the input to be positive or negative?
           print(eloHashMap["Jon Jones-4-23-2016"]); // prints 1313
           print(eloHashMap["Jon Jones-7-6-2019"]); // prints 1343
           */
-          //eloHashMap[eloHashMapString] = currentFighter!.elo!.last; 
-          // currentFighter!.fighterEloHashMap[eloHashMapString] = currentFighter.elo!.last;
-
-
-          //same thing but for blue corner. make sure you didn't forget to change any of the r to b
-          // eloHashMapString = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
-          // currentFighter = _fighters[fight.b_fighter_string];
-          // eloHashMap[eloHashMapString] = currentFighter!.elo!.last;
-          // currentFighter!.fighterEloHashMap[eloHashMapString] = currentFighter.elo!.last;
+          
         }
        // print('year: ${fight.year} month: ${fight.month} day: ${fight.day}');
       }
@@ -460,6 +511,11 @@ maybe have anothe box appear for the input to be positive or negative?
     print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-7-6-2019"]); // should be 1343, and it is!
     print(_fighters["Alexander Gustafsson"]!.fighterEloHashMap["Alexander Gustafsson-5-28-2017"]); // 1247 
     print(_fighters["Drew Dober"]!.fighterEloHashMap["Drew Dober-12-13-2014"]); //1191
+    // print("Gemini test JJ:"); 
+    // print(_fighters['Jon Jones']!.fighterEloHashMap); 
+    //  print("Gemini test manaul:"); 
+    // print(_fighters['TestFighter']!.fighterEloHashMap); 
+
 
     
       /*
