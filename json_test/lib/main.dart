@@ -121,7 +121,6 @@ but that doesn't work, because dart doesn't allow the object and the class name 
 
   late List<FightEntity> _fights = [];
   
-  get eloChart => eloChart;
 
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
@@ -459,6 +458,9 @@ maybe have anothe box appear for the input to be positive or negative?
     print("fighterEloHashMap test:");
     print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-4-23-2016"]); // should be 1313, and it is!
     print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-7-6-2019"]); // should be 1343, and it is!
+    print(_fighters["Alexander Gustafsson"]!.fighterEloHashMap["Alexander Gustafsson-5-28-2017"]); // 1247 
+    print(_fighters["Drew Dober"]!.fighterEloHashMap["Drew Dober-12-13-2014"]); //1191
+
     
       /*
         useful statements
@@ -473,30 +475,7 @@ maybe have anothe box appear for the input to be positive or negative?
               
 
       */
-// this is used in our graph
-      List<Map<String, dynamic>> chartData = []; // Start with an empty list
 
-            // Assuming you have the necessary logic to access each fighter and their fight data
-      for (var fighter in _fighters.values) {
-        Map<String, dynamic> fighterData = {
-          'fighter': fighter.name,
-          'data': []
-        };
-
-        for (var fight in fighter.fight_history!) {
-          String dateOfFight = DateFormat('yyyy-MM-dd').format(DateTime(fight.year!, fight.month!, fight.day!)); 
-
-          fighterData['data'].add({
-            'date': dateOfFight,
-            'elo': fighter.fighterEloHashMap["${fighter.name}-$dateOfFight"] // Assuming this gives you the Elo
-          });
-        }
-
-        chartData.add(fighterData);
-      }
-
-
-      EloChart eloChart = EloChart(chartData);
 
     }); //set state end
 
@@ -545,13 +524,7 @@ maybe have anothe box appear for the input to be positive or negative?
         title: Text(widget.title),
       ),
      
-     body: Center(
-        child: Container(
-          width: MediaQuery.of(context).size.width * 0.8, // Adjust width as needed
-          height: MediaQuery.of(context).size.height * 0.6, // Adjust height as needed
-          child: eloChart,
-        ),
-     ),
+    
       // body: ElevatedButton(
       //   onPressed: () {
       //     readJson();
