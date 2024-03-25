@@ -394,6 +394,7 @@ maybe have anothe box appear for the input to be positive or negative?
       String eloHashMapString_B = "";
       FighterEntity? currentFighter;
       String dateOfFight;
+      int incNum = 0;
 
       for (FightEntity fight in _fights) {      
         // if(fight.b_fighter_string == null){ 
@@ -402,12 +403,15 @@ maybe have anothe box appear for the input to be positive or negative?
 
 // we do this if statement because dart is expecting these values to be not null in setNewRating, and there will be a runtime error if a null value is passed in setNewRating.
         if(fight.winner != null && fight.r_fighter_string != null && fight.b_fighter_string != null){
+          print("${incNum}.. calculating Elo for Fight: ${fight.year}/${fight.month}/${fight.day}"); 
+
           dateOfFight = "${fight.month}-${fight.day}-${fight.year}";
           // eloHashMapString_R = "${fight.r_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           // eloHashMapString_B = "${fight.b_fighter_string}-${fight.month}-${fight.day}-${fight.year}";
           //performm elo calculations
           eloCalculatorObject.setNewRating(fight.winner!, fight.r_fighter_string!, fight.b_fighter_string!, _fighters, _modifiers, dateOfFight);
 
+          incNum++;
           //create the string that will be the key for this entry in eloHashMap
           
           //set currentFighter to the red corner fighter
@@ -477,6 +481,27 @@ maybe have anothe box appear for the input to be positive or negative?
       List<Map<String, dynamic>> chartData = []; // Start with an empty list
 
             // Assuming you have the necessary logic to access each fighter and their fight data
+      // for (var fighter in _fighters.values) {
+      //   Map<String, dynamic> fighterData = {
+      //     'fighter': fighter.name,
+      //     'data': []
+      //   };
+
+      //   for (var fight in fighter.fight_history!) {
+      //     String dateOfFight = DateFormat('yyyy-MM-dd').format(DateTime(fight.year!, fight.month!, fight.day!)); 
+
+      //     fighterData['data'].add({
+      //       'date': dateOfFight,
+      //       'elo': fighter.fighterEloHashMap["${fighter.name}-$dateOfFight"] // Assuming this gives you the Elo
+      //     });
+      //   }
+
+        
+
+      //   chartData.add(fighterData);
+      // }
+
+      int incNumForChartBug = 0;
       for (var fighter in _fighters.values) {
         Map<String, dynamic> fighterData = {
           'fighter': fighter.name,
@@ -492,11 +517,18 @@ maybe have anothe box appear for the input to be positive or negative?
           });
         }
 
+        
+
         chartData.add(fighterData);
+        incNumForChartBug++;
+        if(incNumForChartBug == 3){
+          break;
+        }
       }
 
-
+     
       EloChart eloChart = EloChart(chartData);
+      print("chart generation successful!!!");
 
     }); //set state end
 
