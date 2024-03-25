@@ -8,12 +8,47 @@ import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
 import 'package:intl/intl.dart';
+import 'package:charts_flutter/flutter.dart';
+import 'package:syncfusion_flutter_charts/charts.dart';
+import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 // import 'dart:async';
 
 
 
 void main() {
   runApp(const MyApp());
+}
+
+class EloChart extends StatelessWidget {
+  final List<Map<String, dynamic>> chartData;
+
+  EloChart(this.chartData);
+
+  @override
+  Widget build(BuildContext context) {
+    return SfCartesianChart( // Assuming you're using Syncfusion charts
+      primaryXAxis: DateTimeAxis(), 
+      series: _generateSeries(chartData)
+    );
+  }
+
+  List<LineSeries> _generateSeries(List<Map<String, dynamic>> data) {
+    List<LineSeries> seriesList= [];
+
+    for (var fighterData in data) {
+      seriesList.add(
+        LineSeries(
+          dataSource: fighterData['data'],
+          xValueMapper: (dataPoint, _) => DateTime.parse(dataPoint['date']),
+          yValueMapper: (dataPoint, _) => dataPoint['elo'],
+          name: fighterData['fighter'], 
+          // Customize markers, colors, etc. as desired
+        )
+      );
+    }
+
+    return seriesList;
+  }
 }
 
 class MyApp extends StatelessWidget {
@@ -85,6 +120,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
   late Map<String,FighterEntity> _fighters = {};
 
   late List<FightEntity> _fights = [];
+  
 
   Future<void> readJson() async {
     final String response = await rootBundle.loadString('lib/features/data/data_sources/ufc_data.json');
@@ -194,6 +230,7 @@ but that doesn't work, because dart doesn't allow the object and the class name 
             name: _fightEntity.r_fighter_string,
             weight_classes: [_fightEntity.weight_class!], //  weight_classes is a list containing just "_fightEntity.weight_class". Doesn't account for fighters who fight in multiple weight classes. 
             //weight_class_rank: [int.parse(_data[i]["R_match_weightclass_rank"])],  commented out until bug is fixed
+            //weight_class_rank:[_fightEntity.w!], // need to add weight class rank to fightEntity
             gender: _data[i]["gender"],
             current_win_streak: _data[i]["R_current_win_streak"],
             current_loss_streak: _data[i]["R_current_lose_streak"],
@@ -421,6 +458,9 @@ maybe have anothe box appear for the input to be positive or negative?
     print("fighterEloHashMap test:");
     print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-4-23-2016"]); // should be 1313, and it is!
     print(_fighters["Jon Jones"]!.fighterEloHashMap["Jon Jones-7-6-2019"]); // should be 1343, and it is!
+    print(_fighters["Alexander Gustafsson"]!.fighterEloHashMap["Alexander Gustafsson-5-28-2017"]); // 1247 
+    print(_fighters["Drew Dober"]!.fighterEloHashMap["Drew Dober-12-13-2014"]); //1191
+
     
       /*
         useful statements
@@ -435,6 +475,8 @@ maybe have anothe box appear for the input to be positive or negative?
               
 
       */
+
+
     }); //set state end
 
   } // readJson end
@@ -456,6 +498,13 @@ maybe have anothe box appear for the input to be positive or negative?
   }
 
 
+
+
+// ... your other imports
+
+
+
+
   @override
   Widget build(BuildContext context) {
     // This method is rerun every time setState is called, for instance as done
@@ -475,6 +524,7 @@ maybe have anothe box appear for the input to be positive or negative?
         title: Text(widget.title),
       ),
      
+    
       // body: ElevatedButton(
       //   onPressed: () {
       //     readJson();
