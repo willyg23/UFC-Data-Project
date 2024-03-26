@@ -19,37 +19,6 @@ void main() {
   runApp(const MyApp());
 }
 
-class EloChart extends StatelessWidget {
-  final List<Map<String, dynamic>> chartData;
-
-  EloChart(this.chartData);
-
-  @override
-  Widget build(BuildContext context) {
-    return SfCartesianChart( // Assuming you're using Syncfusion charts
-      primaryXAxis: DateTimeAxis(), 
-      series: _generateSeries(chartData)
-    );
-  }
-
-  List<LineSeries> _generateSeries(List<Map<String, dynamic>> data) {
-    List<LineSeries> seriesList= [];
-
-    for (var fighterData in data) {
-      seriesList.add(
-        LineSeries(
-          dataSource: fighterData['data'],
-          xValueMapper: (dataPoint, _) => DateTime.parse(dataPoint['date']),
-          yValueMapper: (dataPoint, _) => dataPoint['elo'],
-          name: fighterData['fighter'], 
-          // Customize markers, colors, etc. as desired
-        )
-      );
-    }
-
-    return seriesList;
-  }
-}
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
