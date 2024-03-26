@@ -1,9 +1,7 @@
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
-
 import 'package:json_test/features/domain/entities/fight.dart';
 import 'package:json_test/features/domain/entities/fighter.dart';
 import 'package:json_test/features/domain/usecases/eloCalculations.dart';
@@ -15,10 +13,6 @@ import 'package:charts_flutter/flutter.dart' as charts;
 import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 import 'package:json_test/features/domain/usecases/elo_chart_utils.dart';
 import 'package:json_test/features/domain/usecases/elo_data.dart';
-
-// import 'dart:async';
-
-
 
 void main() {
   // runApp(const MyApp());
@@ -50,38 +44,44 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-  // ... // (code from your next step goes here) ...
-   
-    List<charts.Series<EloData, DateTime>> _eloData = []; 
+  // ... other code ... 
 
-    @override
-    void initState() {
-      super.initState();
-      _generateChartData();
-    }
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Flutter Demo',
+      home: FutureBuilder<Map<String, FighterEntity>>( // Using a FutureBuilder
+        future: _fetchFightersData(), // Get fighters data asynchronously
+        builder: (context, snapshot) {
+          if (snapshot.hasData) {
+            // We have the data! Construct MyHomePage
+            return MyHomePage(title: 'Flutter Demo Home Page', fighters: snapshot.data!); 
+          } else if (snapshot.hasError) {
+            // Error - you might want to display an error message
+            return const Text('Error loading data'); 
+          } else {
+            // Display loading indicator (optional)
+            return const Center(child: CircularProgressIndicator()); 
+          }
+        },
+      ),
+      // ... rest of your MaterialApp ... 
+    );
+  }
 
-    void _generateChartData() {
-      // ... your logic to fetch _fighters data and call createChartData ... 
-    }
+  // Helper to fetch _fighters (Assuming data is in _MyHomePageState)
+  Future<Map<String, FighterEntity>> _fetchFightersData() async {
+    // Access _fighters within _MyHomePageState
+    final homePageState = _createHomePageState(); 
+    await homePageState.readJson(); // Assume you have a loadData() method to initialize _fighters
+    return homePageState._fighters;  
+  }
 
-    @override
-    Widget build(BuildContext context) {
-      return MaterialApp(
-        title: 'Flutter Demo',
-        home: Scaffold(
-          appBar: AppBar(title: Text('Fighter ELO Chart')),
-          body: Center(
-            child: charts.LineChart(
-              _eloData,
-              animate: true,
-            ),
-          ),
-        ),
-      );
-    }
-
-
+  // Create a temporary instance of _MyHomePageState
+  _MyHomePageState _createHomePageState() => _MyHomePageState(); 
 }
+
+
 
 // class MyApp extends StatelessWidget {
 //   const MyApp({super.key});
@@ -116,22 +116,31 @@ class _MyAppState extends State<MyApp> {
 // }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
+  const MyHomePage({super.key, required this.title, required this.fighters}); // Add fighters parameter 
 
   final String title;
-
+  final Map<String, FighterEntity> fighters; // Store the fighters data
+  
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
+
+//   // This widget is the home page of your application. It is stateful, meaning
+//   // that it has a State object (defined below) that contains fields that affect
+//   // how it looks.
+
+//   // This class is the configuration for the state. It holds the values (in this
+//   // case the title) provided by the parent (in this case the App widget) and
+//   // used by the build method of the State. Fields in a Widget subclass are
+//   // always marked "final".
+
+//   final String title;
+
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
 
 class _MyHomePageState extends State<MyHomePage> {
 
@@ -152,6 +161,8 @@ but that doesn't work, because dart doesn't allow the object and the class name 
   late Map<String,FighterEntity> _fighters = {};
 
   late List<FightEntity> _fights = [];
+
+  List<charts.Series<EloData, DateTime>> _eloData = [];
   
 
   Future<void> readJson() async {
@@ -540,20 +551,31 @@ maybe have anothe box appear for the input to be positive or negative?
 
  bool _isLoading = true; 
 
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   _initializeData(); 
+  // }
+
+  // void _initializeData() async {
+  //   await readJson(); 
+  //   setState(() {
+  //     _isLoading = false; 
+  //   });
+    
+  // }
+
+
   @override
   void initState() {
     super.initState();
-    _initializeData(); 
+    _generateChartData(widget.fighters); // Access the fighters data using widget.fighters
   }
 
-  void _initializeData() async {
-    await readJson(); 
-    setState(() {
-      _isLoading = false; 
-    });
+  void _generateChartData(Map<String, FighterEntity> fighters) {
+    _eloData = createChartData(fighters);
+    setState(() {}); // Update state to redraw chart
   }
-
-
 
 
 // ... your other imports
